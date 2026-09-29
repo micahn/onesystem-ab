@@ -1,0 +1,82 @@
+{
+  "_note": "Hand-written judgements, kept out of the generator on purpose. Every number quoted here came from a run in out/ and can be checked against it. Claims that did not survive a second look were removed rather than softened - laya was going to be described as under-rating severity until the pooled data showed its score errors go both ways (2 down, 3 up), so that claim is not here.",
+
+  "models": [
+    {
+      "model": "rizzo",
+      "role": "The only one of the three that meets the bar for automatic use",
+      "strengths": [
+        "<strong>85/100 pooled, and 83–86% on every single corpus.</strong> The consistency is the point: laya swings 40→50% and julia <strong>39→60%</strong> depending on the corpus, so for either of those a blended number would be describing an average of two different models. rizzo's accuracy barely moves.",
+        "<strong>The only usable confidence signal.</strong> Mean confidence 0.73 when right against 0.33 when wrong — a gap of 0.40, against 0.01 for laya and 0.07 for julia. <strong>Zero of its 15 wrong answers carried a confidence above 0.90.</strong> That is what makes it gateable: the number means something.",
+        "<strong>Never the sole model to get a case wrong</strong> on the 44-case engineering corpus. On the cases it misses, at least one other model misses too — so there was nothing a second opinion could have caught there.",
+        "Fastest cold start of the three at 7.4s, against laya's 8.3s and julia's 11.9s. The first call is the one users actually notice, and it is not rizzo's weak point.",
+        "The only model that reports its own internals: input tokens, inference time, queue time and peak device bytes per call. That is what made the latency question answerable instead of a guess."
+      ],
+      "weaknesses": [
+        "<strong>8–12× slower warm than the other two.</strong> 195ms median against laya's 23ms and julia's 16ms, pooled over all three corpora. On the broader corpus alone it was 364ms. At System 1 rates that is the difference between a judgement you make and one you queue.",
+        "<strong>Roughly double laya's memory.</strong> 5.9 GB resident against laya's 2.9 GB and julia's 1.0 GB, out of 15.9 GB on this card. Two of these alongside a browser is tight; three is not possible.",
+        "It is still wrong 15 times in 100, and on the broader corpus it under-called severity on both of its score misses. It is not a model to act on without review — it is a model whose <em>disagreement</em> is worth reading.",
+        "Binary questions are its weakest type, though not by much: pooled, 9/11 on <code>noul</code> and 9/11 on <code>score</code> against 67/78 on <code>choice</code>. Worth knowing because 'is this true' is the shape a lot of real System 1 use wants, and 82% is where its weakest type lands."
+      ],
+      "use": "The default. Route its low-confidence tail to a human or a slower model and let it answer everything else unattended. It is the only one whose confidence justifies that split: a perfect high band and a real low tail, which is exactly the shape a two-tier design needs."
+    },
+    {
+      "model": "laya",
+      "role": "Fast, and the most misleading of the three",
+      "strengths": [
+        "Second-fastest warm at 23ms median and the second-smallest at 2.9 GB, so it is a reasonable thing to keep loaded alongside something else.",
+        "The better of the two non-rizzo models outside software engineering: 8/10 on support tickets against julia's 4, and 4/10 on desktop against julia's 3. It beats julia on four of the seven domains — which is a claim about being the second-best model, not about being good.",
+        "Perfectly deterministic, like the other two — 44/44 and 36/36 identical answers on repeat runs."
+      ],
+      "weaknesses": [
+        "<strong>46/100 pooled, and its confidence is very nearly noise.</strong> 0.595 when right against 0.582 when wrong. Its high-confidence band is 18 of 100 answers, right 56% of the time against a 46% base rate — a real but useless gap, since skipping the check on a 56%-correct band automates the error rather than avoiding it. This is the single most important thing to know about laya, because the confidence field is right there in every response and looks like it should be usable.",
+        "<strong>Under-asserts on binary questions.</strong> Six of its seven <code>noul</code> errors were 'said false when the answer was true'. That is a bias, not noise, and a directional one is the dangerous kind: a random error gets caught on a second look, a consistent one does not.",
+        "<strong>Shares a permissive worldview with julia.</strong> On nine engineering cases laya and julia agreed with each other against ground truth while rizzo was right — <code>proceed_anyway</code>, <code>env_file</code>, <code>drop_one</code>, <code>implicit</code>, 'the backup is fine'. Two models agreeing on the same wrong answer is not two pieces of evidence.",
+        "On a corpus that was not software engineering it fell to 50%, and on <code>noul</code> and <code>score</code> specifically it managed 4/11 and 6/11."
+      ],
+      "use": "Cheap first-pass triage where a wrong answer costs little and a human reads the result anyway. Not for anything load-bearing, and never as the basis for a confidence threshold — a 56%-correct high band is not a threshold."
+    },
+    {
+      "model": "julia",
+      "role": "Fastest, and the most confidently mistaken",
+      "strengths": [
+        "Fastest warm of the three at 16ms median, and by far the smallest at 1.0 GB resident.",
+        "The best non-rizzo model on software engineering specifically — 24/44 against laya's 20/44, and 15/25 on engineering tasks. If you only ever ask it engineering questions, it is the pick between these two.",
+        "Deterministic, like the others."
+      ],
+      "weaknesses": [
+        "<strong>Confidently wrong, which is worse than being wrong.</strong> <strong>26 of its wrong answers carried a confidence above 0.90, several at exactly 1.0.</strong> rizzo had zero such answers and laya had zero. Its high band is 78 of 100 answers and right 54% of the time, against a 50% base rate — so the number looks decisive and carries almost nothing. An uncertain wrong answer is the useful kind, because it is the one you would have checked. julia removes that signal from you.",
+        "<strong>50/100 pooled, and the figure depends heavily on the domain: 60% on the small default corpus, 55% on engineering, 39% on the broader one.</strong> A 21-point swing means there is no safe general statement about it, and it scored 4/14 on <code>choice</code> in the broader set against laya's 8/14 on the same questions.",
+        "<strong>Systematically picks the cheap or delegating option.</strong> More memory over streaming the input. Grow the partition over pruning and rebalancing. Wait and watch over escalating. Forward the phishing email to a colleague over verifying it out of band. Each is a defensible-sounding answer that declines to do the work, and the pattern holds across unrelated domains.",
+        "Under-asserts on <code>noul</code> the same way laya does — five of six errors were 'said false when true' — so the two share that bias as well as the permissive one."
+      ],
+      "use": "Software-engineering questions where you have already checked its answer, purely for the latency. Its one genuine advantage over rizzo is 17ms against 204ms, and that only matters if you are making thousands of calls a second."
+    }
+  ],
+
+  "systemOne": {
+    "verdict": "A System 1 model earns its place by being fast, cheap, and <em>legible about when it is unsure</em> — because the whole arrangement depends on a human or a slower process reviewing it, and the review is triggered by uncertainty. Measured against that, only rizzo qualifies. laya and julia are fast and cheap and neither is legible: laya's high-confidence band is right 56% of the time and julia's 54%, against base rates of 46% and 50% — technically better than chance, practically useless, because there is no band you can skip checking. julia goes further and reports above 0.90 confidence on 26 wrong answers, several at exactly 1.0. rizzo's high band was 52 out of 52. A System 1 model you cannot calibrate is not a System 1 model, it is an unlabelled coin flip that runs in 20 milliseconds.",
+    "goodFor": [
+      "Triaging a queue where most items are routine and a person samples the rest — rizzo at 85% clears most of that, and its confidence tells you which to sample.",
+      "Preferring one of a small labelled set, which is what all three are actually built for. Free-text generation, open-ended advice and anything requiring arithmetic are out of scope for all of them.",
+      "A cheap first pass whose answer is cheap to check. The failure mode is symmetric: a wrong answer that a human overturns in two seconds costs nothing, and a wrong answer that ships does.",
+      "Escalation routing, using rizzo's confidence as the trigger. <strong>Every one of the 52 answers it marked ≥0.70 was correct</strong>, and it reported confidence as low as 0.05, so there is a real tail to escalate. That pair of facts is what makes a two-tier design worth building rather than merely tidy."
+    ],
+    "badFor": [
+      "Anything where a single wrong answer is expensive or irreversible. All three under-call severity, and the errors are directional rather than random, so a second glance does not reliably catch them.",
+      "Decisions that need arithmetic, counting or lookup. These are classifiers over text; they will confidently pattern-match 'out of memory' onto 'add memory' without noticing the input grows linearly.",
+      "Averaging several models to get a better answer. Measured: a three-model majority scores <strong>65.9%</strong> against rizzo's 86.4% on the same cases — a 20-point loss, because two weaker models outvote the stronger one exactly where it struggles.",
+      "Assuming agreement is corroboration. On 9 of 44 engineering cases laya and julia agreed with each other and both were wrong. The models share biases, so their agreement carries less information than their independence would suggest."
+    ],
+    "wiring": "They are not drop-in, and the incompatibilities are in the contract rather than the judgement. <code>state</code> is typed differently — laya and rizzo reject a bare string, julia rejects an object — so a payload written for one is a validation error in another. Confidence is named three different ways, laya's <code>score</code> returns two different confidence numbers in the same object, <code>noul</code> has no explicit polarity field, and laya's <code>action.act_probability</code> is 1.0 on every answer ever returned. A caller must branch per model and per question type. The natural design given these results is two-tier: rizzo answers everything, and only its low-confidence tail goes to a human or a slower path. Building a three-way vote on top of this would be strictly worse than not ensembling at all."
+  },
+
+  "limits": [
+    "100 cases in total, 36 of them from the newer broader corpus. A difference of three or four cases is noise; the gaps reported here are 20–40 cases, but the per-domain and per-type rows are small enough that their ordering should not be leaned on.",
+    "The ground truth is 'what a careful practitioner would say', which is a judgement and sometimes an arguable one. At least two of the three cases where <em>all three models</em> were wrong on the engineering corpus look like corpus errors rather than model errors — on <code>w2-feature-branch-ci</code> (CI on main only, which all three called fine, defensibly) and <code>w4-incident-severity</code> (30% of users in one region, where sev1 and sev2 are both arguable). Those are counted against the models here.",
+    "<code>noul</code> polarity is inferred, not declared. julia returns an explicit <code>probabilities</code> map and its bare <code>noul</code> matches <code>probabilities.true</code> exactly in both directions, which confirms the reading for julia. laya and rizzo expose no map at all, so the same reading is assumed from the shared field name. If that assumption is wrong, every laya and rizzo <code>noul</code> score in this report is inverted — and it would be a large correction, not a small one.",
+    "One language, one register. Everything here is English prose about engineering, support and desktop problems. Nothing tests non-English input, code as state, very long state, or adversarial phrasing.",
+    "rizzo's figures come from a 4B model at q8 on one AMD card over Vulkan. A different quantisation, a CUDA card, or a different model version would move both its latency and possibly its accuracy, and the laya and julia results would move too — neither has been measured on hardware other than this machine.",
+    "Nothing here tests what any of them do with a genuinely underspecified question, which is the case a System 1 model's calibration would matter most in. The corpora all have a defensible right answer, so the models were never asked the question that would really matter: whether they know when there isn't one."
+  ]
+}

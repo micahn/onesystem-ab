@@ -1,0 +1,230 @@
+{
+  "name": "default",
+  "questions": [
+    {
+      "id": "refactor-readability",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A parser needs to be split for readability. Which refactor should be preferred?",
+      "criteria": {
+        "named_helpers": "Extract the two branches into small named helper functions with docstrings",
+        "inline_comments": "Keep the function whole and add explanatory comments at each branch"
+      },
+      "answer": "named_helpers",
+      "note": "Both models should manage this. Tests whether the corpus is too easy."
+    },
+    {
+      "id": "deploy-flaky",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A service deploy is flaky on 5% of hosts. Which release strategy is safer?",
+      "criteria": {
+        "canary": "Ship behind a canary flag to a small slice of hosts first and widen on evidence",
+        "bigbang": "Deploy to every host at once so the failure surface is uniform"
+      },
+      "answer": "canary"
+    },
+    {
+      "id": "schema-migration",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A database column changes type. How should the migration be ordered?",
+      "criteria": {
+        "expand_backfill_contract": "Add the new column, backfill in batches, then switch reads, then drop the old",
+        "in_place_alter": "Run ALTER COLUMN TYPE in one statement during the deploy"
+      },
+      "answer": "expand_backfill_contract",
+      "note": "Wants sequencing knowledge. A model without reasoning may still get it from the descriptions."
+    },
+    {
+      "id": "pr-review-scope",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A pull request mixes a bug fix with a large refactor. What should the reviewer ask for?",
+      "criteria": {
+        "split": "Split it so the fix can land and be reverted independently of the refactor",
+        "as_is": "Approve it as one change to avoid coordination overhead"
+      },
+      "answer": "split"
+    },
+    {
+      "id": "incident-severity",
+      "type": "choice",
+      "task": "operations",
+      "instructions": "An internal dashboard shows one region returning errors for 4% of requests. How should this be classified?",
+      "criteria": {
+        "sev3": "Sev 3, page the on-call during business hours and fix next week",
+        "sev2": "Sev 2, page the on-call now and mitigate before the next business day"
+      },
+      "answer": "sev3",
+      "note": "Deliberately arguable. Disagreement here is more interesting than agreement."
+    },
+    {
+      "id": "cache-invalidation",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A cache is stale after a write. What is the correct fix?",
+      "criteria": {
+        "invalidate_on_write": "Invalidate the key in the write path so the next read is correct",
+        "shorten_ttl": "Shorten the TTL so stale data disappears sooner"
+      },
+      "answer": "invalidate_on_write"
+    },
+    {
+      "id": "dependency-bump",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A transitive dependency has a critical CVE. What is the first move?",
+      "criteria": {
+        "pin_and_test": "Pin the patched version, run the suite, and release on a short timeline",
+        "wait_upstream": "Wait for the direct dependency to publish an upgrade"
+      },
+      "answer": "pin_and_test"
+    },
+    {
+      "id": "test-mocking",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A unit test is brittle because it mocks a third-party HTTP client. What should replace the mock?",
+      "criteria": {
+        "local_server": "Run a real local HTTP server and point the client at it",
+        "deeper_mock": "Mock more layers so the test never touches a socket"
+      },
+      "answer": "local_server"
+    },
+    {
+      "id": "log-retention",
+      "type": "choice",
+      "task": "operations",
+      "instructions": "Log storage is growing past budget. What should be reduced first?",
+      "criteria": {
+        "debug_level": "Drop debug-level logs and keep warnings and errors at full retention",
+        "everything": "Cut retention uniformly across all levels to halve storage"
+      },
+      "answer": "debug_level"
+    },
+    {
+      "id": "feature-flag-cleanup",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A feature flag has been at 100% for six months. What should happen?",
+      "criteria": {
+        "remove": "Remove the flag and the dead branch it guards",
+        "keep": "Keep it in case the rollout needs to be reversed"
+      },
+      "answer": "remove"
+    },
+    {
+      "id": "api-versioning",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A public API needs a breaking change. Which approach is least disruptive?",
+      "criteria": {
+        "new_version": "Publish a v2 alongside v1 and migrate clients over a deprecation window",
+        "break_now": "Make the breaking change now and announce it in release notes"
+      },
+      "answer": "new_version"
+    },
+    {
+      "id": "flaky-test-quarantine",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "One test fails about 2% of runs. What is the right response?",
+      "criteria": {
+        "quarantine": "Quarantine it, file an issue, and keep it visible in the dashboard until fixed",
+        "retry": "Add a retry so the pipeline stops being red"
+      },
+      "answer": "quarantine",
+      "note": "Both answers are defensible in practice. Good disagreement bait."
+    },
+    {
+      "id": "error-message-user",
+      "type": "choice",
+      "task": "design",
+      "instructions": "A user-facing error needs to be shown. What should it contain?",
+      "criteria": {
+        "actionable": "What went wrong and what the user can do next, without a stack trace",
+        "diagnostic": "The full diagnostic detail including internal identifiers"
+      },
+      "answer": "actionable"
+    },
+    {
+      "id": "naming-booleans",
+      "type": "choice",
+      "task": "design",
+      "instructions": "A boolean parameter is called `force`. What is the better signature?",
+      "criteria": {
+        "explicit_mode": "Replace it with an explicit mode enum so every option is named at the call site",
+        "keep_bool": "Keep the boolean and document the flag on the parameter"
+      },
+      "answer": "explicit_mode"
+    },
+    {
+      "id": "idempotency-key",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A payment endpoint may be retried by the client. What prevents double charges?",
+      "criteria": {
+        "idempotency_key": "Accept an idempotency key and return the original result for a repeat",
+        "dedupe_window": "Deduplicate identical requests inside a short time window"
+      },
+      "answer": "idempotency_key"
+    },
+    {
+      "id": "backpressure",
+      "type": "choice",
+      "task": "operations",
+      "instructions": "A queue is growing faster than its consumer drains it. What is the immediate lever?",
+      "criteria": {
+        "scale_consumer": "Scale the consumer, since the queue depth is the signal that work is accumulating",
+        "drop_oldest": "Drop the oldest queued items to keep latency bounded"
+      },
+      "answer": "scale_consumer"
+    },
+    {
+      "id": "feature-branch-length",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A branch is three weeks old and conflicts constantly. What should change?",
+      "criteria": {
+        "smaller_changes": "Ship smaller changes more often so branches stay short",
+        "rebase_often": "Rebase onto main more frequently to reduce conflicts"
+      },
+      "answer": "smaller_changes",
+      "note": "Both help. The first is the root cause; a model that reasons should prefer it."
+    },
+    {
+      "id": "structured-logging",
+      "type": "choice",
+      "task": "design",
+      "instructions": "Logs need to be queried across services. Which format?",
+      "criteria": {
+        "json": "Structured JSON so fields are queryable rather than grepped",
+        "plain": "Readable plain text, which is easier for a human scanning a terminal"
+      },
+      "answer": "json"
+    },
+    {
+      "id": "secret-rotation",
+      "type": "choice",
+      "task": "operations",
+      "instructions": "An API key must be rotated. Which order is correct?",
+      "criteria": {
+        "dual_write": "Accept both keys, move callers over, then revoke the old one",
+        "cut_over": "Replace the key everywhere in one coordinated change"
+      },
+      "answer": "dual_write"
+    },
+    {
+      "id": "type-vs-test",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A public function's parameter is a string that must be one of three values. What should it be?",
+      "criteria": {
+        "union_type": "A union type so invalid values are rejected before the function runs",
+        "validate_runtime": "A string, validated at the top of the function"
+      },
+      "answer": "union_type"
+    }
+  ]
+}

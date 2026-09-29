@@ -1,0 +1,6 @@
+{
+  "_note": "Measured separately from a warm run: cold is the first call after `onesystem stop && start`, so it includes model load. VRAM is from GET /health with all three warm, i.e. resident device memory per backend, not peak.",
+  "measuredAt": "2026-09-29",
+  "coldMs": { "laya": 8300, "julia": 11926, "rizzo": 7357 },
+  "vram": { "laya": 3204447744, "julia": 1148576000, "rizzo": 6396316672 }
+}

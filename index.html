@@ -1,0 +1,1151 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>System 1 models — A/B/C comparison</title>
+<style>
+  :root {
+    --bg:#0f1115; --panel:#161a21; --panel2:#1c212a; --line:#262c37;
+    --fg:#e6e9ef; --muted:#98a2b3; --dim:#6b7480;
+    --laya:#7aa2f7; --julia:#9ece6a; --rizzo:#e0af68; --other:#bb9af7;
+    --good:#9ece6a; --bad:#f7768e; --warn:#e0af68;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+    font:15px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  .wrap { max-width:1080px; margin:0 auto; padding:40px 24px 96px; }
+  h1 { font-size:30px; margin:0 0 6px; letter-spacing:-.02em; }
+  h2 { font-size:20px; margin:44px 0 14px; letter-spacing:-.01em; }
+  h3 { font-size:16px; margin:26px 0 10px; color:var(--muted); font-weight:600; }
+  p { margin:0 0 12px; }
+  .sub { color:var(--muted); margin:0 0 4px; }
+  .meta { color:var(--dim); font-size:13px; margin:0 0 28px; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:18px 20px; margin:0 0 16px; }
+  .grid { display:grid; gap:14px; }
+  .g3 { grid-template-columns:repeat(3,1fr); }
+  .g2 { grid-template-columns:repeat(2,1fr); }
+  @media (max-width:820px){ .g3,.g2 { grid-template-columns:1fr; } }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th,td { text-align:left; padding:7px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { color:var(--muted); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:.05em; }
+  td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+  tr:last-child td { border-bottom:none; }
+  code, .mono { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13px; }
+  .bar { display:inline-block; width:110px; height:7px; background:#252b36; border-radius:4px; overflow:hidden; vertical-align:middle; margin-right:8px; }
+  .bar i { display:block; height:100%; border-radius:4px; }
+  .t-laya{background:var(--laya)} .t-julia{background:var(--julia)} .t-rizzo{background:var(--rizzo)} .t-other{background:var(--other)}
+  .tag { display:inline-block; padding:1px 8px; border-radius:20px; font-size:12px; font-weight:600; }
+  .m-laya{color:var(--laya);background:rgba(122,162,247,.13)}
+  .m-julia{color:var(--julia);background:rgba(158,206,106,.13)}
+  .m-rizzo{color:var(--rizzo);background:rgba(224,175,104,.13)}
+  .m-other{color:var(--other);background:rgba(187,154,247,.13)}
+  .big { font-size:26px; font-weight:650; letter-spacing:-.02em; }
+  .lbl { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.05em; }
+  ul { margin:0 0 12px; padding-left:20px; } li { margin:0 0 6px; }
+  .pro { border-left:2px solid var(--line); padding:2px 0 2px 16px; margin:0 0 14px; color:var(--muted); }
+  .verdict { border-left:3px solid var(--rizzo); }
+  .note { background:var(--panel2); border:1px solid var(--line); border-radius:8px; padding:12px 16px; color:var(--muted); font-size:14px; margin:0 0 16px; }
+  .note strong { color:var(--fg); }
+  details { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:0 16px; margin:0 0 8px; }
+  details[open] { padding-bottom:12px; }
+  summary { cursor:pointer; padding:12px 0; font-weight:550; }
+  summary:hover { color:var(--rizzo); }
+  .q { color:var(--muted); font-size:13.5px; margin:0 0 8px; }
+  .opts { font-size:13px; color:var(--dim); margin:0 0 8px; }
+  .why { font-size:13px; color:var(--dim); font-style:italic; }
+  .yes { color:var(--good); } .no { color:var(--bad); }
+  footer { color:var(--dim); font-size:13px; margin-top:48px; padding-top:20px; border-top:1px solid var(--line); }
+</style></head><body><div class="wrap">
+<h1>System 1 models — A/B/C comparison</h1>
+<p class="sub">laya, julia and rizzo answering the same questions through onesystem.</p>
+<p class="meta">default <code>2c0c33e2f42b</code> · 20 cases · 2026-09-29 00:23<br>wide <code>82bb3225dd9f</code> · 44 cases · 2026-09-29 00:23<br>broad <code>cfc73f489c8d</code> · 36 cases · 2026-09-29 00:28</p>
+<h2>Headline</h2>
+<div class="grid g3">
+<div class="card">
+      <div class="lbl">laya</div>
+      <div class="big">46%</div>
+      <div class="sub">46/100 across 3 corpora</div>
+      <span class="bar"><i class="t-laya" style="width:46.0%"></i></span>
+    </div>
+<div class="card">
+      <div class="lbl">julia</div>
+      <div class="big">50%</div>
+      <div class="sub">50/100 across 3 corpora</div>
+      <span class="bar"><i class="t-julia" style="width:50.0%"></i></span>
+    </div>
+<div class="card">
+      <div class="lbl">rizzo</div>
+      <div class="big">85%</div>
+      <div class="sub">85/100 across 3 corpora</div>
+      <span class="bar"><i class="t-rizzo" style="width:85.0%"></i></span>
+    </div>
+</div>
+<h3>Per corpus</h3>
+<div class="card"><table><tr><th>corpus</th><th class="num">laya</th><th class="num">julia</th><th class="num">rizzo</th><th class="num">cases</th></tr>
+<tr><td class="mono">default</td><td class="num">8/20 <span class="bar"><i class="t-laya" style="width:40.0%"></i></span></td><td class="num">12/20 <span class="bar"><i class="t-julia" style="width:60.0%"></i></span></td><td class="num">17/20 <span class="bar"><i class="t-rizzo" style="width:85.0%"></i></span></td><td class="num">20</td></tr>
+<tr><td class="mono">wide</td><td class="num">20/44 <span class="bar"><i class="t-laya" style="width:45.5%"></i></span></td><td class="num">24/44 <span class="bar"><i class="t-julia" style="width:54.5%"></i></span></td><td class="num">38/44 <span class="bar"><i class="t-rizzo" style="width:86.4%"></i></span></td><td class="num">44</td></tr>
+<tr><td class="mono">broad</td><td class="num">18/36 <span class="bar"><i class="t-laya" style="width:50.0%"></i></span></td><td class="num">14/36 <span class="bar"><i class="t-julia" style="width:38.9%"></i></span></td><td class="num">30/36 <span class="bar"><i class="t-rizzo" style="width:83.3%"></i></span></td><td class="num">36</td></tr>
+</table></div>
+<h2>Cost</h2>
+<div class="note">Cold is the first call after a daemon restart — model load, not <em>thinking</em>. Warm is every call after that. They differ by two orders of magnitude, so a single mean is misleading in both directions.</div>
+<div class="card"><table>
+    <tr><th>model</th><th class="num">cold</th><th class="num">warm median</th><th class="num">warm p95</th>
+    <th class="num">VRAM</th><th class="num">deterministic?</th><th class="num">tokens reported?</th></tr>
+<tr><td><span class="tag m-laya">laya</span></td><td class="num">8.3 s</td><td class="num">23 ms</td><td class="num">51 ms</td><td class="num">2.98 G</td><td class="num"><span class="yes">yes</span></td><td class="num">no</td></tr>
+<tr><td><span class="tag m-julia">julia</span></td><td class="num">11.9 s</td><td class="num">15 ms</td><td class="num">18 ms</td><td class="num">1.07 G</td><td class="num"><span class="yes">yes</span></td><td class="num">no</td></tr>
+<tr><td><span class="tag m-rizzo">rizzo</span></td><td class="num">7.4 s</td><td class="num">196 ms</td><td class="num">461 ms</td><td class="num">5.96 G</td><td class="num"><span class="yes">yes</span></td><td class="num">yes</td></tr>
+</table></div>
+<h2>Where each model is strong</h2>
+<p class="sub">Accuracy per domain, pooled across corpora. A model that is excellent at one thing and mediocre at the rest is more useful than its average suggests, and the reverse is also true.</p>
+<div class="card"><table><tr><th>domain</th><th class="num">laya</th><th class="num">julia</th><th class="num">rizzo</th></tr>
+<tr><td>design</td><td class="num">4/7 <span class="bar"><i class="t-laya" style="width:57.1%"></i></span></td><td class="num">5/7 <span class="bar"><i class="t-julia" style="width:71.4%"></i></span></td><td class="num">6/7 <span class="bar"><i class="t-rizzo" style="width:85.7%"></i></span></td></tr>
+<tr><td>desktop</td><td class="num">4/10 <span class="bar"><i class="t-laya" style="width:40.0%"></i></span></td><td class="num">3/10 <span class="bar"><i class="t-julia" style="width:30.0%"></i></span></td><td class="num">9/10 <span class="bar"><i class="t-rizzo" style="width:90.0%"></i></span></td></tr>
+<tr><td>diagnosis</td><td class="num">2/10 <span class="bar"><i class="t-laya" style="width:20.0%"></i></span></td><td class="num">5/10 <span class="bar"><i class="t-julia" style="width:50.0%"></i></span></td><td class="num">7/10 <span class="bar"><i class="t-rizzo" style="width:70.0%"></i></span></td></tr>
+<tr><td>engineering</td><td class="num">15/38 <span class="bar"><i class="t-laya" style="width:39.5%"></i></span></td><td class="num">23/38 <span class="bar"><i class="t-julia" style="width:60.5%"></i></span></td><td class="num">33/38 <span class="bar"><i class="t-rizzo" style="width:86.8%"></i></span></td></tr>
+<tr><td>judgment</td><td class="num">4/6 <span class="bar"><i class="t-laya" style="width:66.7%"></i></span></td><td class="num">2/6 <span class="bar"><i class="t-julia" style="width:33.3%"></i></span></td><td class="num">5/6 <span class="bar"><i class="t-rizzo" style="width:83.3%"></i></span></td></tr>
+<tr><td>operations</td><td class="num">9/17 <span class="bar"><i class="t-laya" style="width:52.9%"></i></span></td><td class="num">8/17 <span class="bar"><i class="t-julia" style="width:47.1%"></i></span></td><td class="num">14/17 <span class="bar"><i class="t-rizzo" style="width:82.4%"></i></span></td></tr>
+<tr><td>security</td><td class="num">0/2 <span class="bar"><i class="t-laya" style="width:1.5%"></i></span></td><td class="num">0/2 <span class="bar"><i class="t-julia" style="width:1.5%"></i></span></td><td class="num">2/2 <span class="bar"><i class="t-rizzo" style="width:100.0%"></i></span></td></tr>
+<tr><td>support</td><td class="num">8/10 <span class="bar"><i class="t-laya" style="width:80.0%"></i></span></td><td class="num">4/10 <span class="bar"><i class="t-julia" style="width:40.0%"></i></span></td><td class="num">9/10 <span class="bar"><i class="t-rizzo" style="width:90.0%"></i></span></td></tr>
+</table></div>
+<h3>Per question type</h3>
+<div class="card"><table><tr><th>type</th><th class="num">laya</th><th class="num">julia</th><th class="num">rizzo</th></tr>
+<tr><td class="mono">choice</td><td class="num">36/78 <span class="bar"><i class="t-laya" style="width:46.2%"></i></span></td><td class="num">40/78 <span class="bar"><i class="t-julia" style="width:51.3%"></i></span></td><td class="num">67/78 <span class="bar"><i class="t-rizzo" style="width:85.9%"></i></span></td></tr>
+<tr><td class="mono">noul</td><td class="num">4/11 <span class="bar"><i class="t-laya" style="width:36.4%"></i></span></td><td class="num">5/11 <span class="bar"><i class="t-julia" style="width:45.5%"></i></span></td><td class="num">9/11 <span class="bar"><i class="t-rizzo" style="width:81.8%"></i></span></td></tr>
+<tr><td class="mono">score</td><td class="num">6/11 <span class="bar"><i class="t-laya" style="width:54.5%"></i></span></td><td class="num">5/11 <span class="bar"><i class="t-julia" style="width:45.5%"></i></span></td><td class="num">9/11 <span class="bar"><i class="t-rizzo" style="width:81.8%"></i></span></td></tr>
+</table></div>
+<h2>Can you trust a model's confidence?</h2>
+<p class="sub">Pooled over all 3 corpora. You gate on a confidence number by acting on the high band and escalating the low one, so what matters is whether the <em>top</em> of the range is pure and whether the model can express doubt at all. A small positive gap in the means is not enough: a model that reports 0.85 when right and 0.78 when wrong is technically better than chance and practically useless, because there is no band you can act on.</p>
+<div class="card"><table>
+    <tr><th>model</th><th class="num">mean conf<br>right</th><th class="num">mean conf<br>wrong</th>
+    <th class="num">lowest<br>ever</th><th class="num">high band<br>(≥0.70)</th><th class="num">precision<br>in band</th>
+    <th class="num">wrong at<br>≥0.90</th><th>usable as a gate?</th></tr>
+<tr><td><span class="tag m-laya">laya</span></td><td class="num">0.595</td><td class="num">0.582</td><td class="num ">0.31</td><td class="num">18</td><td class="num">56%</td><td class="num yes">0/54</td><td><span class="no">barely — some signal, but 56% in the high band is not something to act on</span></td></tr>
+<tr><td><span class="tag m-julia">julia</span></td><td class="num">0.855</td><td class="num">0.787</td><td class="num ">0.00</td><td class="num">78</td><td class="num">54%</td><td class="num no">26/50</td><td><span class="no">no — the high band is no purer than the base rate</span></td></tr>
+<tr><td><span class="tag m-rizzo">rizzo</span></td><td class="num">0.730</td><td class="num">0.326</td><td class="num ">0.05</td><td class="num">52</td><td class="num">100%</td><td class="num yes">0/15</td><td><span class="yes">yes — 52/52 correct in the high band</span></td></tr>
+</table></div>
+<h2>Do they know different things?</h2>
+<p class="sub">Two models agreeing about as often as their own accuracies predict are carrying the same information, and running both buys nothing. <em>Lift</em> is observed agreement minus the independent rate: near zero means redundant, positive means there is something to combine.</p>
+<h3 class="mono">default</h3>
+<div class="card"><table>
+      <tr><th>pair</th><th class="num">agree</th><th class="num">if independent</th><th class="num">lift</th>
+      <th class="num">both wrong</th><th class="num">only one right</th></tr>
+<tr><td>laya <span class="sub">/</span> julia</td><td class="num">10/20 (50%)</td><td class="num">48%</td><td class="num ">+2.0 pp</td><td class="num">5</td><td class="num">3 / 7</td></tr>
+<tr><td>laya <span class="sub">/</span> rizzo</td><td class="num">9/20 (45%)</td><td class="num">43%</td><td class="num ">+2.0 pp</td><td class="num">2</td><td class="num">1 / 10</td></tr>
+<tr><td>julia <span class="sub">/</span> rizzo</td><td class="num">9/20 (45%)</td><td class="num">57%</td><td class="num no">-12.0 pp</td><td class="num">0</td><td class="num">3 / 8</td></tr>
+<tr><td colspan="6" class="sub" style="padding-top:12px">All three gave the same answer on <strong>4/20</strong> cases. The other 16 are listed below.</td></tr>
+</table></div>
+<h3 class="mono">wide</h3>
+<div class="card"><table>
+      <tr><th>pair</th><th class="num">agree</th><th class="num">if independent</th><th class="num">lift</th>
+      <th class="num">both wrong</th><th class="num">only one right</th></tr>
+<tr><td>laya <span class="sub">/</span> julia</td><td class="num">24/44 (55%)</td><td class="num">50%</td><td class="num ">+5.0 pp</td><td class="num">12</td><td class="num">8 / 12</td></tr>
+<tr><td>laya <span class="sub">/</span> rizzo</td><td class="num">24/44 (55%)</td><td class="num">47%</td><td class="num yes">+7.9 pp</td><td class="num">5</td><td class="num">1 / 19</td></tr>
+<tr><td>julia <span class="sub">/</span> rizzo</td><td class="num">26/44 (59%)</td><td class="num">53%</td><td class="num yes">+5.8 pp</td><td class="num">4</td><td class="num">2 / 16</td></tr>
+<tr><td colspan="6" class="sub" style="padding-top:12px">All three gave the same answer on <strong>14/44</strong> cases. The other 30 are listed below.</td></tr>
+</table></div>
+<h3 class="mono">broad</h3>
+<div class="card"><table>
+      <tr><th>pair</th><th class="num">agree</th><th class="num">if independent</th><th class="num">lift</th>
+      <th class="num">both wrong</th><th class="num">only one right</th></tr>
+<tr><td>laya <span class="sub">/</span> julia</td><td class="num">20/36 (56%)</td><td class="num">50%</td><td class="num yes">+5.6 pp</td><td class="num">12</td><td class="num">10 / 6</td></tr>
+<tr><td>laya <span class="sub">/</span> rizzo</td><td class="num">18/36 (50%)</td><td class="num">50%</td><td class="num ">+0.0 pp</td><td class="num">3</td><td class="num">3 / 15</td></tr>
+<tr><td>julia <span class="sub">/</span> rizzo</td><td class="num">12/36 (33%)</td><td class="num">43%</td><td class="num no">-9.3 pp</td><td class="num">2</td><td class="num">4 / 20</td></tr>
+<tr><td colspan="6" class="sub" style="padding-top:12px">All three gave the same answer on <strong>6/36</strong> cases. The other 30 are listed below.</td></tr>
+</table></div>
+<h2>Does asking all three help?</h2>
+<div class="card">
+      <p><strong>Three-model majority: 65.0%</strong> vs best single model
+      (<strong>rizzo 85.0%</strong>) —
+      <span class="no">-20.0 pp</span>.</p>
+      <p class="sub">modal answer wins, 0 of 20 cases three-way tied. default corpus.</p>
+    </div>
+<div class="card">
+      <p><strong>Three-model majority: 65.9%</strong> vs best single model
+      (<strong>rizzo 86.4%</strong>) —
+      <span class="no">-20.5 pp</span>.</p>
+      <p class="sub">modal answer wins, 1 of 44 cases three-way tied. wide corpus.</p>
+    </div>
+<div class="card">
+      <p><strong>Three-model majority: 63.9%</strong> vs best single model
+      (<strong>rizzo 83.3%</strong>) —
+      <span class="no">-19.4 pp</span>.</p>
+      <p class="sub">modal answer wins, 4 of 36 cases three-way tied. broad corpus.</p>
+    </div>
+<div class="note"><strong>Read that before building a fan-out.</strong> A majority vote only helps when the models are of comparable quality. When one is clearly better than the other two, the modal answer is usually the wrong one, because two weak models outvote one strong one on exactly the cases the strong model finds difficult.</div>
+<h3>And how much is there to win at all?</h3>
+<p class="sub">The ceiling for any strategy that picks between these models: correct whenever at <em>any</em> one of them was. If that is close to the best single model, no amount of clever routing helps — the models fail together.</p>
+<div class="card"><table>
+    <tr><th>corpus</th><th class="num">oracle</th><th class="num">best single</th><th class="num">headroom</th><th>reading</th></tr>
+<tr><td class="mono">default</td><td class="num">20/20 (100%)</td><td class="num">rizzo 85%</td><td class="num">3 cases</td><td class="sub">almost nothing left — the three agree on the hard cases and are wrong together</td></tr>
+<tr><td class="mono">wide</td><td class="num">41/44 (93%)</td><td class="num">rizzo 86%</td><td class="num">3 cases</td><td class="sub">almost nothing left — the three agree on the hard cases and are wrong together</td></tr>
+<tr><td class="mono">broad</td><td class="num">34/36 (94%)</td><td class="num">rizzo 83%</td><td class="num">4 cases</td><td class="sub">almost nothing left — the three agree on the hard cases and are wrong together</td></tr>
+</table></div>
+<h2>Strengths and weaknesses</h2>
+<div class="card">
+        <h3 style="margin-top:0"><span class="tag m-rizzo">rizzo</span> The only one of the three that meets the bar for automatic use</h3>
+        <div class="grid g2">
+          <div><div class="lbl">Strengths</div><ul><li><strong>85/100 pooled, and 83–86% on every single corpus.</strong> The consistency is the point: laya swings 40→50% and julia <strong>39→60%</strong> depending on the corpus, so for either of those a blended number would be describing an average of two different models. rizzo's accuracy barely moves.</li><li><strong>The only usable confidence signal.</strong> Mean confidence 0.73 when right against 0.33 when wrong — a gap of 0.40, against 0.01 for laya and 0.07 for julia. <strong>Zero of its 15 wrong answers carried a confidence above 0.90.</strong> That is what makes it gateable: the number means something.</li><li><strong>Never the sole model to get a case wrong</strong> on the 44-case engineering corpus. On the cases it misses, at least one other model misses too — so there was nothing a second opinion could have caught there.</li><li>Fastest cold start of the three at 7.4s, against laya's 8.3s and julia's 11.9s. The first call is the one users actually notice, and it is not rizzo's weak point.</li><li>The only model that reports its own internals: input tokens, inference time, queue time and peak device bytes per call. That is what made the latency question answerable instead of a guess.</li></ul></div>
+          <div><div class="lbl">Weaknesses</div><ul><li><strong>8–12× slower warm than the other two.</strong> 195ms median against laya's 23ms and julia's 16ms, pooled over all three corpora. On the broader corpus alone it was 364ms. At System 1 rates that is the difference between a judgement you make and one you queue.</li><li><strong>Roughly double laya's memory.</strong> 5.9 GB resident against laya's 2.9 GB and julia's 1.0 GB, out of 15.9 GB on this card. Two of these alongside a browser is tight; three is not possible.</li><li>It is still wrong 15 times in 100, and on the broader corpus it under-called severity on both of its score misses. It is not a model to act on without review — it is a model whose <em>disagreement</em> is worth reading.</li><li>Binary questions are its weakest type, though not by much: pooled, 9/11 on <code>noul</code> and 9/11 on <code>score</code> against 67/78 on <code>choice</code>. Worth knowing because 'is this true' is the shape a lot of real System 1 use wants, and 82% is where its weakest type lands.</li></ul></div>
+        </div>
+        <p class="pro" style="margin-top:10px"><strong>Use it for:</strong> The default. Route its low-confidence tail to a human or a slower model and let it answer everything else unattended. It is the only one whose confidence justifies that split: a perfect high band and a real low tail, which is exactly the shape a two-tier design needs.</p>
+      </div>
+<div class="card">
+        <h3 style="margin-top:0"><span class="tag m-laya">laya</span> Fast, and the most misleading of the three</h3>
+        <div class="grid g2">
+          <div><div class="lbl">Strengths</div><ul><li>Second-fastest warm at 23ms median and the second-smallest at 2.9 GB, so it is a reasonable thing to keep loaded alongside something else.</li><li>The better of the two non-rizzo models outside software engineering: 8/10 on support tickets against julia's 4, and 4/10 on desktop against julia's 3. It beats julia on four of the seven domains — which is a claim about being the second-best model, not about being good.</li><li>Perfectly deterministic, like the other two — 44/44 and 36/36 identical answers on repeat runs.</li></ul></div>
+          <div><div class="lbl">Weaknesses</div><ul><li><strong>46/100 pooled, and its confidence is very nearly noise.</strong> 0.595 when right against 0.582 when wrong. Its high-confidence band is 18 of 100 answers, right 56% of the time against a 46% base rate — a real but useless gap, since skipping the check on a 56%-correct band automates the error rather than avoiding it. This is the single most important thing to know about laya, because the confidence field is right there in every response and looks like it should be usable.</li><li><strong>Under-asserts on binary questions.</strong> Six of its seven <code>noul</code> errors were 'said false when the answer was true'. That is a bias, not noise, and a directional one is the dangerous kind: a random error gets caught on a second look, a consistent one does not.</li><li><strong>Shares a permissive worldview with julia.</strong> On nine engineering cases laya and julia agreed with each other against ground truth while rizzo was right — <code>proceed_anyway</code>, <code>env_file</code>, <code>drop_one</code>, <code>implicit</code>, 'the backup is fine'. Two models agreeing on the same wrong answer is not two pieces of evidence.</li><li>On a corpus that was not software engineering it fell to 50%, and on <code>noul</code> and <code>score</code> specifically it managed 4/11 and 6/11.</li></ul></div>
+        </div>
+        <p class="pro" style="margin-top:10px"><strong>Use it for:</strong> Cheap first-pass triage where a wrong answer costs little and a human reads the result anyway. Not for anything load-bearing, and never as the basis for a confidence threshold — a 56%-correct high band is not a threshold.</p>
+      </div>
+<div class="card">
+        <h3 style="margin-top:0"><span class="tag m-julia">julia</span> Fastest, and the most confidently mistaken</h3>
+        <div class="grid g2">
+          <div><div class="lbl">Strengths</div><ul><li>Fastest warm of the three at 16ms median, and by far the smallest at 1.0 GB resident.</li><li>The best non-rizzo model on software engineering specifically — 24/44 against laya's 20/44, and 15/25 on engineering tasks. If you only ever ask it engineering questions, it is the pick between these two.</li><li>Deterministic, like the others.</li></ul></div>
+          <div><div class="lbl">Weaknesses</div><ul><li><strong>Confidently wrong, which is worse than being wrong.</strong> <strong>26 of its wrong answers carried a confidence above 0.90, several at exactly 1.0.</strong> rizzo had zero such answers and laya had zero. Its high band is 78 of 100 answers and right 54% of the time, against a 50% base rate — so the number looks decisive and carries almost nothing. An uncertain wrong answer is the useful kind, because it is the one you would have checked. julia removes that signal from you.</li><li><strong>50/100 pooled, and the figure depends heavily on the domain: 60% on the small default corpus, 55% on engineering, 39% on the broader one.</strong> A 21-point swing means there is no safe general statement about it, and it scored 4/14 on <code>choice</code> in the broader set against laya's 8/14 on the same questions.</li><li><strong>Systematically picks the cheap or delegating option.</strong> More memory over streaming the input. Grow the partition over pruning and rebalancing. Wait and watch over escalating. Forward the phishing email to a colleague over verifying it out of band. Each is a defensible-sounding answer that declines to do the work, and the pattern holds across unrelated domains.</li><li>Under-asserts on <code>noul</code> the same way laya does — five of six errors were 'said false when true' — so the two share that bias as well as the permissive one.</li></ul></div>
+        </div>
+        <p class="pro" style="margin-top:10px"><strong>Use it for:</strong> Software-engineering questions where you have already checked its answer, purely for the latency. Its one genuine advantage over rizzo is 17ms against 204ms, and that only matters if you are making thousands of calls a second.</p>
+      </div>
+<h2>As System 1 models</h2>
+<div class="card verdict">
+      <p>A System 1 model earns its place by being fast, cheap, and <em>legible about when it is unsure</em> — because the whole arrangement depends on a human or a slower process reviewing it, and the review is triggered by uncertainty. Measured against that, only rizzo qualifies. laya and julia are fast and cheap and neither is legible: laya's high-confidence band is right 56% of the time and julia's 54%, against base rates of 46% and 50% — technically better than chance, practically useless, because there is no band you can skip checking. julia goes further and reports above 0.90 confidence on 26 wrong answers, several at exactly 1.0. rizzo's high band was 52 out of 52. A System 1 model you cannot calibrate is not a System 1 model, it is an unlabelled coin flip that runs in 20 milliseconds.</p>
+      <div class="grid g2" style="margin-top:14px">
+        <div><div class="lbl">Genuinely good for</div><ul><li>Triaging a queue where most items are routine and a person samples the rest — rizzo at 85% clears most of that, and its confidence tells you which to sample.</li><li>Preferring one of a small labelled set, which is what all three are actually built for. Free-text generation, open-ended advice and anything requiring arithmetic are out of scope for all of them.</li><li>A cheap first pass whose answer is cheap to check. The failure mode is symmetric: a wrong answer that a human overturns in two seconds costs nothing, and a wrong answer that ships does.</li><li>Escalation routing, using rizzo's confidence as the trigger. <strong>Every one of the 52 answers it marked ≥0.70 was correct</strong>, and it reported confidence as low as 0.05, so there is a real tail to escalate. That pair of facts is what makes a two-tier design worth building rather than merely tidy.</li></ul></div>
+        <div><div class="lbl">Not for</div><ul><li>Anything where a single wrong answer is expensive or irreversible. All three under-call severity, and the errors are directional rather than random, so a second glance does not reliably catch them.</li><li>Decisions that need arithmetic, counting or lookup. These are classifiers over text; they will confidently pattern-match 'out of memory' onto 'add memory' without noticing the input grows linearly.</li><li>Averaging several models to get a better answer. Measured: a three-model majority scores <strong>65.9%</strong> against rizzo's 86.4% on the same cases — a 20-point loss, because two weaker models outvote the stronger one exactly where it struggles.</li><li>Assuming agreement is corroboration. On 9 of 44 engineering cases laya and julia agreed with each other and both were wrong. The models share biases, so their agreement carries less information than their independence would suggest.</li></ul></div>
+      </div>
+      <p class="pro" style="margin-top:12px"><strong>Wiring:</strong> They are not drop-in, and the incompatibilities are in the contract rather than the judgement. &lt;code&gt;state&lt;/code&gt; is typed differently — laya and rizzo reject a bare string, julia rejects an object — so a payload written for one is a validation error in another. Confidence is named three different ways, laya's &lt;code&gt;score&lt;/code&gt; returns two different confidence numbers in the same object, &lt;code&gt;noul&lt;/code&gt; has no explicit polarity field, and laya's &lt;code&gt;action.act_probability&lt;/code&gt; is 1.0 on every answer ever returned. A caller must branch per model and per question type. The natural design given these results is two-tier: rizzo answers everything, and only its low-confidence tail goes to a human or a slower path. Building a three-way vote on top of this would be strictly worse than not ensembling at all.</p>
+    </div>
+<h2>What this does not settle</h2>
+<div class="card"><ul><li>100 cases in total, 36 of them from the newer broader corpus. A difference of three or four cases is noise; the gaps reported here are 20–40 cases, but the per-domain and per-type rows are small enough that their ordering should not be leaned on.</li><li>The ground truth is 'what a careful practitioner would say', which is a judgement and sometimes an arguable one. At least two of the three cases where <em>all three models</em> were wrong on the engineering corpus look like corpus errors rather than model errors — on <code>w2-feature-branch-ci</code> (CI on main only, which all three called fine, defensibly) and <code>w4-incident-severity</code> (30% of users in one region, where sev1 and sev2 are both arguable). Those are counted against the models here.</li><li><code>noul</code> polarity is inferred, not declared. julia returns an explicit <code>probabilities</code> map and its bare <code>noul</code> matches <code>probabilities.true</code> exactly in both directions, which confirms the reading for julia. laya and rizzo expose no map at all, so the same reading is assumed from the shared field name. If that assumption is wrong, every laya and rizzo <code>noul</code> score in this report is inverted — and it would be a large correction, not a small one.</li><li>One language, one register. Everything here is English prose about engineering, support and desktop problems. Nothing tests non-English input, code as state, very long state, or adversarial phrasing.</li><li>rizzo's figures come from a 4B model at q8 on one AMD card over Vulkan. A different quantisation, a CUDA card, or a different model version would move both its latency and possibly its accuracy, and the laya and julia results would move too — neither has been measured on hardware other than this machine.</li><li>Nothing here tests what any of them do with a genuinely underspecified question, which is the case a System 1 model's calibration would matter most in. The corpora all have a defensible right answer, so the models were never asked the question that would really matter: whether they know when there isn't one.</li></ul></div>
+<h2>Every disagreement</h2>
+<p class="sub">Where the models differ, with the question and the reasoning behind the ground truth. These are the cases worth reading; the rest are all three saying the same thing.</p>
+<h3 class="mono">default — 16 of 20</h3>
+<details><summary>
+        <code>refactor-readability</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A parser needs to be split for readability. Which refactor should be preferred?</p>
+      <p class="opts"><strong>named_helpers</strong> — Extract the two branches into small named helper functions with docstrings<br><strong>inline_comments</strong> — Keep the function whole and add explanatory comments at each branch</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">named_helpers</td><td class="mono yes">named_helpers</td><td class="mono no">inline_comments</td><td class="mono yes">named_helpers</td></tr>
+      </table>
+      
+      <p class="sub" style="margin-top:4px">Both models should manage this. Tests whether the corpus is too easy.</p>
+    </details>
+<details><summary>
+        <code>deploy-flaky</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A service deploy is flaky on 5% of hosts. Which release strategy is safer?</p>
+      <p class="opts"><strong>canary</strong> — Ship behind a canary flag to a small slice of hosts first and widen on evidence<br><strong>bigbang</strong> — Deploy to every host at once so the failure surface is uniform</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">canary</td><td class="mono no">bigbang</td><td class="mono yes">canary</td><td class="mono yes">canary</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>schema-migration</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A database column changes type. How should the migration be ordered?</p>
+      <p class="opts"><strong>expand_backfill_contract</strong> — Add the new column, backfill in batches, then switch reads, then drop the old<br><strong>in_place_alter</strong> — Run ALTER COLUMN TYPE in one statement during the deploy</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">expand_backfill_contract</td><td class="mono no">in_place_alter</td><td class="mono no">in_place_alter</td><td class="mono yes">expand_backfill_contract</td></tr>
+      </table>
+      
+      <p class="sub" style="margin-top:4px">Wants sequencing knowledge. A model without reasoning may still get it from the descriptions.</p>
+    </details>
+<details><summary>
+        <code>pr-review-scope</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A pull request mixes a bug fix with a large refactor. What should the reviewer ask for?</p>
+      <p class="opts"><strong>split</strong> — Split it so the fix can land and be reverted independently of the refactor<br><strong>as_is</strong> — Approve it as one change to avoid coordination overhead</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">split</td><td class="mono no">as_is</td><td class="mono yes">split</td><td class="mono yes">split</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>incident-severity</code> <span class="sub">operations · choice</span>
+      </summary>
+      <p class="q">An internal dashboard shows one region returning errors for 4% of requests. How should this be classified?</p>
+      <p class="opts"><strong>sev3</strong> — Sev 3, page the on-call during business hours and fix next week<br><strong>sev2</strong> — Sev 2, page the on-call now and mitigate before the next business day</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">sev3</td><td class="mono no">sev2</td><td class="mono no">sev2</td><td class="mono yes">sev3</td></tr>
+      </table>
+      
+      <p class="sub" style="margin-top:4px">Deliberately arguable. Disagreement here is more interesting than agreement.</p>
+    </details>
+<details><summary>
+        <code>test-mocking</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A unit test is brittle because it mocks a third-party HTTP client. What should replace the mock?</p>
+      <p class="opts"><strong>local_server</strong> — Run a real local HTTP server and point the client at it<br><strong>deeper_mock</strong> — Mock more layers so the test never touches a socket</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">local_server</td><td class="mono yes">local_server</td><td class="mono no">deeper_mock</td><td class="mono yes">local_server</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>log-retention</code> <span class="sub">operations · choice</span>
+      </summary>
+      <p class="q">Log storage is growing past budget. What should be reduced first?</p>
+      <p class="opts"><strong>debug_level</strong> — Drop debug-level logs and keep warnings and errors at full retention<br><strong>everything</strong> — Cut retention uniformly across all levels to halve storage</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">debug_level</td><td class="mono no">everything</td><td class="mono yes">debug_level</td><td class="mono yes">debug_level</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>feature-flag-cleanup</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A feature flag has been at 100% for six months. What should happen?</p>
+      <p class="opts"><strong>remove</strong> — Remove the flag and the dead branch it guards<br><strong>keep</strong> — Keep it in case the rollout needs to be reversed</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">remove</td><td class="mono no">keep</td><td class="mono no">keep</td><td class="mono yes">remove</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>api-versioning</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A public API needs a breaking change. Which approach is least disruptive?</p>
+      <p class="opts"><strong>new_version</strong> — Publish a v2 alongside v1 and migrate clients over a deprecation window<br><strong>break_now</strong> — Make the breaking change now and announce it in release notes</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">new_version</td><td class="mono no">break_now</td><td class="mono yes">new_version</td><td class="mono yes">new_version</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>flaky-test-quarantine</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">One test fails about 2% of runs. What is the right response?</p>
+      <p class="opts"><strong>quarantine</strong> — Quarantine it, file an issue, and keep it visible in the dashboard until fixed<br><strong>retry</strong> — Add a retry so the pipeline stops being red</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">quarantine</td><td class="mono no">retry</td><td class="mono yes">quarantine</td><td class="mono no">retry</td></tr>
+      </table>
+      
+      <p class="sub" style="margin-top:4px">Both answers are defensible in practice. Good disagreement bait.</p>
+    </details>
+<details><summary>
+        <code>error-message-user</code> <span class="sub">design · choice</span>
+      </summary>
+      <p class="q">A user-facing error needs to be shown. What should it contain?</p>
+      <p class="opts"><strong>actionable</strong> — What went wrong and what the user can do next, without a stack trace<br><strong>diagnostic</strong> — The full diagnostic detail including internal identifiers</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">actionable</td><td class="mono no">diagnostic</td><td class="mono no">diagnostic</td><td class="mono yes">actionable</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>naming-booleans</code> <span class="sub">design · choice</span>
+      </summary>
+      <p class="q">A boolean parameter is called `force`. What is the better signature?</p>
+      <p class="opts"><strong>explicit_mode</strong> — Replace it with an explicit mode enum so every option is named at the call site<br><strong>keep_bool</strong> — Keep the boolean and document the flag on the parameter</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">explicit_mode</td><td class="mono yes">explicit_mode</td><td class="mono yes">explicit_mode</td><td class="mono no">keep_bool</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>backpressure</code> <span class="sub">operations · choice</span>
+      </summary>
+      <p class="q">A queue is growing faster than its consumer drains it. What is the immediate lever?</p>
+      <p class="opts"><strong>scale_consumer</strong> — Scale the consumer, since the queue depth is the signal that work is accumulating<br><strong>drop_oldest</strong> — Drop the oldest queued items to keep latency bounded</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">scale_consumer</td><td class="mono yes">scale_consumer</td><td class="mono no">drop_oldest</td><td class="mono yes">scale_consumer</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>feature-branch-length</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A branch is three weeks old and conflicts constantly. What should change?</p>
+      <p class="opts"><strong>smaller_changes</strong> — Ship smaller changes more often so branches stay short<br><strong>rebase_often</strong> — Rebase onto main more frequently to reduce conflicts</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">smaller_changes</td><td class="mono no">rebase_often</td><td class="mono yes">smaller_changes</td><td class="mono no">rebase_often</td></tr>
+      </table>
+      
+      <p class="sub" style="margin-top:4px">Both help. The first is the root cause; a model that reasons should prefer it.</p>
+    </details>
+<details><summary>
+        <code>structured-logging</code> <span class="sub">design · choice</span>
+      </summary>
+      <p class="q">Logs need to be queried across services. Which format?</p>
+      <p class="opts"><strong>json</strong> — Structured JSON so fields are queryable rather than grepped<br><strong>plain</strong> — Readable plain text, which is easier for a human scanning a terminal</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">json</td><td class="mono no">plain</td><td class="mono yes">json</td><td class="mono yes">json</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>type-vs-test</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A public function's parameter is a string that must be one of three values. What should it be?</p>
+      <p class="opts"><strong>union_type</strong> — A union type so invalid values are rejected before the function runs<br><strong>validate_runtime</strong> — A string, validated at the top of the function</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">union_type</td><td class="mono no">validate_runtime</td><td class="mono no">validate_runtime</td><td class="mono yes">union_type</td></tr>
+      </table>
+      
+      
+    </details>
+<h3 class="mono">wide — 30 of 44</h3>
+<details><summary>
+        <code>w2-service-owner</code> <span class="sub">operations · choice</span>
+      </summary>
+      <p class="q">A service has no named owner. What should happen first?</p>
+      <p class="opts"><strong>assign_team</strong> — Assign a team as owner before any further work is scheduled against it<br><strong>proceed_anyway</strong> — Proceed and assign an owner later if someone happens to notice</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">assign_team</td><td class="mono no">proceed_anyway</td><td class="mono no">proceed_anyway</td><td class="mono yes">assign_team</td></tr>
+      </table>
+      
+      <p class="sub" style="margin-top:4px">Two options, to stay comparable with the default corpus.</p>
+    </details>
+<details><summary>
+        <code>w3-rollout-strategy</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A risky change needs to reach production. Which rollout strategy?</p>
+      <p class="opts"><strong>canary</strong> — Canary to a small slice, watch metrics, then widen<br><strong>blue_green</strong> — Stand up a parallel environment and cut over when it looks healthy<br><strong>big_bang</strong> — Ship to everything at once during a quiet period</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">canary</td><td class="mono no">big_bang</td><td class="mono yes">canary</td><td class="mono yes">canary</td></tr>
+      </table>
+      
+      <p class="sub" style="margin-top:4px">Three options. Measures whether extra labels degrade either model.</p>
+    </details>
+<details><summary>
+        <code>w4-incident-severity</code> <span class="sub">operations · choice</span>
+      </summary>
+      <p class="q">Checkout is failing for 30% of users in one region. Severity?</p>
+      <p class="opts"><strong>sev1</strong> — Sev 1: revenue is actively lost, page everyone and treat as all-hands<br><strong>sev2</strong> — Sev 2: significant but bounded, page the on-call and mitigate today<br><strong>sev3</strong> — Sev 3: degraded for some users, fix on the normal schedule</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">sev1</td><td class="mono no">sev2</td><td class="mono no">sev3</td><td class="mono no">sev3</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w3-schema-change</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A table needs a new NOT NULL column with no default. Which migration?</p>
+      <p class="opts"><strong>nullable_backfill</strong> — Add it nullable, backfill in batches, then add the constraint<br><strong>default_instant</strong> — Add it with a constant default in a single statement<br><strong>truncate_recreate</strong> — Write a new table with the constraint and copy rows over</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">nullable_backfill</td><td class="mono no">default_instant</td><td class="mono yes">nullable_backfill</td><td class="mono no">truncate_recreate</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w3-log-levels</code> <span class="sub">operations · choice</span>
+      </summary>
+      <p class="q">Debug logging is expensive. What should be reduced?</p>
+      <p class="opts"><strong>debug_only</strong> — Turn off debug, keep info and above<br><strong>info_and_above</strong> — Turn off info as well, keep warnings only<br><strong>sample_debug</strong> — Sample debug lines to a fraction and keep everything else</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">debug_only</td><td class="mono yes">debug_only</td><td class="mono no">sample_debug</td><td class="mono no">sample_debug</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w3-rewrite-decision</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A legacy module is painful to change. What is the right response?</p>
+      <p class="opts"><strong>incremental</strong> — Add tests at the seam and refactor in small steps as you touch it<br><strong>rewrite</strong> — Rewrite the module in one pass against the current tests<br><strong>leave</strong> — Leave it and add comments explaining the constraints</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">incremental</td><td class="mono no">leave</td><td class="mono yes">incremental</td><td class="mono yes">incremental</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w2-credential-storage</code> <span class="sub">security · choice</span>
+      </summary>
+      <p class="q">Where should a database password live?</p>
+      <p class="opts"><strong>secret_manager</strong> — A secret manager, injected at runtime and never in the repo<br><strong>env_file</strong> — A gitignored .env file on each host</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">secret_manager</td><td class="mono no">env_file</td><td class="mono no">env_file</td><td class="mono yes">secret_manager</td></tr>
+      </table>
+      
+      <p class="sub" style="margin-top:4px">Both are defensible in small setups; the intended answer assumes a hosted secret store.</p>
+    </details>
+<details><summary>
+        <code>w3-observability-first</code> <span class="sub">operations · choice</span>
+      </summary>
+      <p class="q">Before refactoring an unmonitored service, what should come first?</p>
+      <p class="opts"><strong>instrument</strong> — Add metrics, logs and traces so the refactor has a baseline<br><strong>refactor_first</strong> — Refactor first and add instrumentation afterwards<br><strong>manual_checks</strong> — Add a manual runbook and check by hand after each change</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">instrument</td><td class="mono no">refactor_first</td><td class="mono no">refactor_first</td><td class="mono yes">instrument</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w3-dependency-conflict</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">Two dependencies require incompatible versions of a shared library. What now?</p>
+      <p class="opts"><strong>pin_and_isolate</strong> — Pin one version and isolate the other behind an interface you own<br><strong>force_resolve</strong> — Force the resolver to pick one and hope nothing breaks<br><strong>drop_one</strong> — Drop whichever dependency is less central and rebuild</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">pin_and_isolate</td><td class="mono no">drop_one</td><td class="mono no">drop_one</td><td class="mono yes">pin_and_isolate</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w2-monolith-split</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A monolith is hard to deploy. What is the first step?</p>
+      <p class="opts"><strong>carve_service</strong> — Extract one well-bounded component behind a network boundary<br><strong>split_all</strong> — Split the codebase into services along directory lines</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">carve_service</td><td class="mono no">split_all</td><td class="mono yes">carve_service</td><td class="mono yes">carve_service</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w4-error-taxonomy</code> <span class="sub">design · choice</span>
+      </summary>
+      <p class="q">How should a library classify errors?</p>
+      <p class="opts"><strong>typed_hierarchy</strong> — A typed hierarchy the caller can match on, distinct from unexpected faults<br><strong>strings</strong> — Error strings the caller pattern-matches, for simplicity</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">typed_hierarchy</td><td class="mono no">strings</td><td class="mono no">strings</td><td class="mono yes">typed_hierarchy</td></tr>
+      </table>
+      
+      <p class="sub" style="margin-top:4px">Two labels despite the id, kept deliberately to compare 2-way and 4-way handling.</p>
+    </details>
+<details><summary>
+        <code>w3-cache-warmup</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A cold cache makes the first requests after deploy very slow. What helps?</p>
+      <p class="opts"><strong>prewarm</strong> — Prewarm the cache during deploy before shifting traffic<br><strong>scale_up</strong> — Scale up the fleet so the slow first requests are absorbed<br><strong>stagger</strong> — Stagger the deploy so instances warm at different times</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">prewarm</td><td class="mono yes">prewarm</td><td class="mono no">scale_up</td><td class="mono yes">prewarm</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w2-idempotent-deploy</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A deploy script fails halfway. What property matters most?</p>
+      <p class="opts"><strong>rerunnable</strong> — Running it again converges rather than compounding the damage<br><strong>rollback</strong> — It can automatically restore the previous release</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">rerunnable</td><td class="mono no">rollback</td><td class="mono yes">rerunnable</td><td class="mono no">rollback</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w3-schema-registry</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">Several services consume events from one producer. How should the contract be managed?</p>
+      <p class="opts"><strong>registry</strong> — A schema registry with compatibility checks in CI<br><strong>wiki</strong> — A wiki page documenting the event shapes<br><strong>implicit</strong> — Consumers read the producer's code and rely on tests</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">registry</td><td class="mono no">implicit</td><td class="mono no">implicit</td><td class="mono yes">registry</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w3-oncall-handoff</code> <span class="sub">operations · choice</span>
+      </summary>
+      <p class="q">How should on-call handoffs work between people?</p>
+      <p class="opts"><strong>written_summary</strong> — A written summary of open incidents and recent changes, read aloud<br><strong>verbal_only</strong> — A verbal walkthrough, since writing it up wastes time</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">written_summary</td><td class="mono no">verbal_only</td><td class="mono yes">written_summary</td><td class="mono yes">written_summary</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w2-nondeterminism</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A build produces different bytes for the same source. What is the fix?</p>
+      <p class="opts"><strong>pin_inputs</strong> — Pin every input including timestamps and toolchain versions<br><strong>retry</strong> — Rebuild until the output matches the previous one</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">pin_inputs</td><td class="mono no">retry</td><td class="mono yes">pin_inputs</td><td class="mono yes">pin_inputs</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w2-backup-restore</code> <span class="sub">operations · choice</span>
+      </summary>
+      <p class="q">Backups run nightly and have never been restored. What is the real state?</p>
+      <p class="opts"><strong>unproven</strong> — There is no backup until a restore has been verified end to end<br><strong>fine</strong> — The backups exist on disk, which is the same thing</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">unproven</td><td class="mono no">fine</td><td class="mono no">fine</td><td class="mono yes">unproven</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w3-api-compat</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A public API adds an optional field. What is required of consumers?</p>
+      <p class="opts"><strong>nothing</strong> — Nothing, since it is optional and additive<br><strong>regenerate</strong> — Regenerate client types and redeploy before relying on it</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">nothing</td><td class="mono yes">nothing</td><td class="mono no">regenerate</td><td class="mono yes">nothing</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w2-session-sticky</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A load balancer sends a user's requests to different instances and sessions break. Fix?</p>
+      <p class="opts"><strong>externalize</strong> — Store session state outside the instances so any can serve any request<br><strong>sticky</strong> — Turn on sticky sessions so a user stays on one instance</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">externalize</td><td class="mono no">sticky</td><td class="mono no">sticky</td><td class="mono yes">externalize</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w3-queue-ordering</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">Two messages for the same account must be processed in order. What guarantees it?</p>
+      <p class="opts"><strong>partition_key</strong> — Partition the queue by account id so one consumer sees them in order<br><strong>priority</strong> — Give them a higher priority so they are processed first<br><strong>single_consumer</strong> — Use a single consumer thread for the whole queue</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">partition_key</td><td class="mono no">priority</td><td class="mono yes">partition_key</td><td class="mono yes">partition_key</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w2-legacy-test</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A test is slow, flaky, and asserts almost nothing. What first?</p>
+      <p class="opts"><strong>delete</strong> — Delete it; a slow flaky test with no signal is worse than no test<br><strong>quarantine</strong> — Quarantine it and keep it for reference</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">delete</td><td class="mono no">quarantine</td><td class="mono yes">delete</td><td class="mono yes">delete</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w3-cost-vs-latency</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A cache would cut p99 latency but adds a dependency. What decides it?</p>
+      <p class="opts"><strong>measure</strong> — Measure whether latency is actually a problem before adding the dependency<br><strong>add_it</strong> — Add the cache, since lower latency is usually worth it</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">measure</td><td class="mono no">add_it</td><td class="mono yes">measure</td><td class="mono yes">measure</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w2-config-secrets</code> <span class="sub">security · choice</span>
+      </summary>
+      <p class="q">A feature flag's value must not be visible to users. What applies?</p>
+      <p class="opts"><strong>server_only</strong> — Resolve the flag server-side so the value never reaches the client<br><strong>client_visible</strong> — Ship the flag to the client for instant evaluation, obfuscated</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">server_only</td><td class="mono no">client_visible</td><td class="mono no">client_visible</td><td class="mono yes">server_only</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w3-read-replica</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">Reporting queries are slowing down the primary. What is the first move?</p>
+      <p class="opts"><strong>replica</strong> — Point reads at a replica and accept the staleness<br><strong>index</strong> — Add indexes and rewrite the queries before adding infrastructure<br><strong>shard</strong> — Shard the primary to spread the write and read load</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">index</td><td class="mono yes">index</td><td class="mono no">shard</td><td class="mono yes">index</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w2-graceful-shutdown</code> <span class="sub">operations · choice</span>
+      </summary>
+      <p class="q">Deploys drop in-flight requests. What is missing?</p>
+      <p class="opts"><strong>drain</strong> — Stop accepting new work, finish in-flight work, then exit<br><strong>restart_fast</strong> — Exit faster so the orchestrator starts the new instance sooner</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">drain</td><td class="mono yes">drain</td><td class="mono no">restart_fast</td><td class="mono yes">drain</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w3-type-annotations</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A dynamic codebase is hard to refactor. What helps most?</p>
+      <p class="opts"><strong>types_at_edges</strong> — Add types at the module boundaries so the core can be checked<br><strong>types_everywhere</strong> — Annotate every function everywhere immediately<br><strong>no_types</strong> — Types are not the bottleneck; write tests first</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">types_at_edges</td><td class="mono yes">types_at_edges</td><td class="mono no">no_types</td><td class="mono yes">types_at_edges</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w3-schema-registry-2</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A consumer breaks because a producer renamed a field. Prevention?</p>
+      <p class="opts"><strong>contract_tests</strong> — Contract tests run in the producer's CI against real consumers<br><strong>changelog</strong> — A changelog the consumers are expected to read</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">contract_tests</td><td class="mono yes">contract_tests</td><td class="mono no">changelog</td><td class="mono yes">contract_tests</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w2-idempotent-migration</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A migration partially applied and the deploy retried. What property saves it?</p>
+      <p class="opts"><strong>check_first</strong> — The migration checks its own preconditions and skips work already done<br><strong>fresh_db</strong> — Recreate the database from scratch and replay everything</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">check_first</td><td class="mono yes">check_first</td><td class="mono no">fresh_db</td><td class="mono yes">check_first</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w3-latency-budget</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">A request must return in 200ms and calls three services. What should exist?</p>
+      <p class="opts"><strong>budget_split</strong> — A per-dependency time budget derived from the 200ms total<br><strong>global_timeout</strong> — A single timeout on the whole request</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">budget_split</td><td class="mono no">global_timeout</td><td class="mono yes">budget_split</td><td class="mono yes">budget_split</td></tr>
+      </table>
+      
+      
+    </details>
+<details><summary>
+        <code>w3-blue_green-cost</code> <span class="sub">engineering · choice</span>
+      </summary>
+      <p class="q">Blue-green deploys double infrastructure cost during cutover. When are they worth it?</p>
+      <p class="opts"><strong>irreversible</strong> — When a rollback must be instant and the change is hard to reverse<br><strong>always</strong> — For every release, since the safety is worth the cost</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">irreversible</td><td class="mono no">always</td><td class="mono yes">irreversible</td><td class="mono yes">irreversible</td></tr>
+      </table>
+      
+      
+    </details>
+<h3 class="mono">broad — 30 of 36</h3>
+<details><summary>
+        <code>support-duplicate-charge</code> <span class="sub">support · choice</span>
+      </summary>
+      <p class="q">Ticket: 'I subscribed to the Team plan (annual, $149) on 3 June. My card statement shows two identical charges of $149, one on 3 June and one on 4 June, both still pending. I only intended one subscription. Our finance team flags duplicate line items on a company card, so this has to be clean before month end.' There is no prior history on this account, and last year was a single $129 charge. What should support do?</p>
+      <p class="opts"><strong>refund_one</strong> — Refund the second charge in full and confirm the 3 June subscription is untouched.<br><strong>cancel_and_recharge</strong> — Cancel both charges and re-run the subscription so the ledger has one clean entry.<br><strong>account_credit</strong> — Leave the second charge in place and issue a $149 account credit instead.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">refund_one</td><td class="mono yes">refund_one</td><td class="mono no">account_credit</td><td class="mono yes">refund_one</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: The first charge already represents the valid annual renewal, so reversing the duplicate restores the correct state without disturbing a good subscription, and a credit leaves an unauthorised charge on a statement that the customer's own compliance process is actively flagging.</p>
+      <p class="sub" style="margin-top:4px">Billing triage. The account-credit option is the standard reflex and is defensible in general; the compliance flag in the ticket is what rules it out here.</p>
+    </details>
+<details><summary>
+        <code>support-screenshot-sufficient</code> <span class="sub">support · noul</span>
+      </summary>
+      <p class="q">Ticket: 'Your support agent told me on Tuesday that my March dashboard total was wrong. Here is a screenshot of the dashboard - the Total Revenue tile reads $41,200, and my finance team says it should be $88,400.' The attachment is a 2560x1440 PNG showing the Total Revenue tile, a date range of 1-31 March, and a workspace switcher reading 'Acme Corp'. No other screenshots, no export file, no filter panel visible, no ticket history. Can engineering determine from this evidence that the total is wrong?</p>
+      <p class="opts"><strong>false</strong> — Yes - the screenshot proves the figure, so engineering can act on it.<br><strong>true</strong> — No - a rendered tile shows an output, not the rows or query behind it, so the claim cannot be confirmed or acted on.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">true</td><td class="mono no">false</td><td class="mono yes">true</td><td class="mono yes">true</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: A wrong filter, a partial date range, a stale cache and a genuine calculation bug all render as the same plausible tile, so the image cannot discriminate between them and no bug can be identified from it.</p>
+      <p class="sub" style="margin-top:4px">Whether the model asks for the underlying rows before agreeing with a confident customer.</p>
+    </details>
+<details><summary>
+        <code>support-late-refund-window</code> <span class="sub">support · noul</span>
+      </summary>
+      <p class="q">Ticket: 'I bought the $299 annual Designer plan on 2 July and I would like a refund. It is not quite what we expected and we did not end up using it as much as planned. I would like the money back.' The account was created on 2 July, the desktop client has been launched 34 times since, and the plan's published refund policy is: refunds available within 30 days of the charge, none after. 45 days have now passed. Should this be refunded?</p>
+      <p class="opts"><strong>false</strong> — Refund it - the customer is unhappy and retention is worth more than the $299.<br><strong>true</strong> — Decline it - the published 30-day window has passed and the product was used exactly as a customer would expect.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">true</td><td class="mono yes">true</td><td class="mono yes">true</td><td class="mono no">false</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: The customer agreed to a 30-day limit and used the product throughout that window, so honouring the published term is a discretionary exception that nothing in the ticket makes compelling.</p>
+      <p class="sub" style="margin-top:4px">Retention reflex against stated terms. The distractor is what an agent does under a satisfaction quota.</p>
+    </details>
+<details><summary>
+        <code>support-export-role-scope</code> <span class="sub">support · choice</span>
+      </summary>
+      <p class="q">Ticket: 'I am the workspace admin for our 400-person workspace and I cannot export the quarterly report. Clicking Export returns &quot;Permission denied: your role cannot export data&quot;. Our finance director holds the identical admin role and exports fine. The help page states that exports are available to admins. I am on the latest app version and have signed out and back in twice; it still fails.' The support agent can look up the workspace's permission assignments. What should they conclude?</p>
+      <p class="opts"><strong>config_error</strong> — Nothing is broken; the admin role genuinely lacks the export permission and the help page is inaccurate.<br><strong>product_bug</strong> — Something is broken; two people with the identical role behave differently, so the role grant or the permission check is at fault.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">product_bug</td><td class="mono no">config_error</td><td class="mono yes">product_bug</td><td class="mono yes">product_bug</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: Because two holders of the same role get different outcomes, the role cannot be the explanation, and the documented behaviour contradicts the refusal, so the fault is in how the grant or the check is applied.</p>
+      <p class="sub" style="margin-top:4px">Bug versus config, decided by a control: same role, different outcome.</p>
+    </details>
+<details><summary>
+        <code>support-outage-escalate</code> <span class="sub">support · choice</span>
+      </summary>
+      <p class="q">Ticket: 'All of our API requests have been returning 401 Unauthorized since about 14:02 UTC - roughly 40 minutes. Three of our four staff are idle because the integration that feeds our order queue is down. Nothing changed on our side: no redeploy, no config edit, no key rotation. Other customers on the same plan are working normally. This is our busiest hour and we have 400 orders queued.' What should the first action be?</p>
+      <p class="opts"><strong>escalate_p1</strong> — Treat it as a production outage: page the on-call and incident commander now, post a status update, and keep the customer informed.<br><strong>send_docs</strong> — Send the authentication troubleshooting guide and ask them to check their API key and token scopes.<br><strong>wait_and_watch</strong> — Ask the customer to confirm it is still happening, and wait an hour before escalating.<br><strong>service_credit</strong> — Offer a service credit for the disruption and tell them to retry once it clears.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">escalate_p1</td><td class="mono yes">escalate_p1</td><td class="mono no">wait_and_watch</td><td class="mono yes">escalate_p1</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: A credential-wide 401 confined to one tenant with no change on the customer's side, during their peak, is an availability incident with money on the line, and no customer-side action can repair a server-side token path.</p>
+      <p class="sub" style="margin-top:4px">The auth-error framing invites a 'user's fault' reflex; the tenant-specificity and the no-change-on-their-side facts are the discriminators.</p>
+    </details>
+<details><summary>
+        <code>support-refund-not-credit</code> <span class="sub">support · noul</span>
+      </summary>
+      <p class="q">Ticket: 'We were charged twice for a single month and your colleague told us on the phone that we would get the money back. The second charge has already settled on our corporate card, and our bank has flagged it as a possible duplicate-fraud entry. Can you confirm how this will be resolved?' The duplicate charge is confirmed, undisputed, and $89. Should the resolution be a refund to the original payment method?</p>
+      <p class="opts"><strong>false</strong> — No - issue an account credit instead, which is faster and avoids a card dispute.<br><strong>true</strong> — Yes - refund the duplicate to the card that was charged, so the bank sees the entry reversed.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">true</td><td class="mono yes">true</td><td class="mono no">false</td><td class="mono yes">true</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: Only a reversal of that exact settled charge clears the bank's duplicate-fraud flag, whereas a credit returns the balance while leaving the flagged entry sitting on the statement.</p>
+      <p class="sub" style="margin-top:4px">Credit-instead-of-refund is the fast reflex. The bank flag is what makes a refund dominant here.</p>
+    </details>
+<details><summary>
+        <code>support-invoice-name-severity</code> <span class="sub">support · score</span>
+      </summary>
+      <p class="q">Ticket: 'Invoices arrive with our legal entity as &quot;Northwind Analytics LLC&quot; but our registered name is &quot;Northwind Analytics Ltd&quot;. We have asked twice and nothing has changed. Payments still go through and the VAT number is correct, but our accountant rejects the invoice every month and we re-issue it by hand. It affects every single invoice we receive.' How urgent is this?</p>
+      <p class="opts"><strong>0</strong> — Cosmetic - no impact, fix it whenever convenient.<br><strong>1</strong> — Annoying - recurring manual work each cycle, but nothing is blocked and the normal queue is fine.<br><strong>2</strong> — Blocking - the month-end close stops each cycle until someone else fixes it.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">Annoying - recurring manual work each cycle, but nothing is blocked and the normal queue is fine.</td><td class="mono yes">1</td><td class="mono no">0</td><td class="mono yes">1</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: The invoices are payable and nothing stops, but the manual re-issue repeats every month forever, which is real recurring work and sits well above cosmetic without ever halting the close.</p>
+      <p class="sub" style="margin-top:4px">Severity calibration. Level 0 is the hasty pick; level 2 would need the month-end close to actually stop.</p>
+    </details>
+<details><summary>
+        <code>support-nightly-export-severity</code> <span class="sub">support · score</span>
+      </summary>
+      <p class="q">Ticket: 'Our nightly automated export has finished at 06:00 instead of 00:00 for the last three nights. The data is all there and correct when it arrives, but our team starts at 08:00 and has to work from yesterday's figures until then. Support tells us the job is running within the 6-hour SLA.' They generate 4,000 rows a night and have no other data source. How urgent is this?</p>
+      <p class="opts"><strong>0</strong> — Not a fault - inside the agreed window, nothing to do.<br><strong>1</strong> — Minor - a small annoyance with no effect on how they work.<br><strong>2</strong> — Degrading - they lose real hours every working morning and have no alternative source of the data.<br><strong>3</strong> — Blocking - they cannot do their job at all without it.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">Degrading - they lose real hours every working morning and have no alternative source of the data.</td><td class="mono yes">2</td><td class="mono no">1</td><td class="mono yes">2</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: The data is complete and they still get their work done, so this is not blocking, but three mornings of starting on stale numbers with no fallback is recurring lost time that an SLA label does not make harmless.</p>
+      <p class="sub" style="margin-top:4px">Whether the model weighs the customer's lost morning rather than repeating the SLA framing.</p>
+    </details>
+<details><summary>
+        <code>support-onboarding-escalation</code> <span class="sub">support · choice</span>
+      </summary>
+      <p class="q">Ticket: 'We signed up for a trial 12 days ago and have never been able to complete setup. Every time we try to import our contacts, the page spins for about a minute and then shows &quot;Something went wrong - import failed&quot;. We have tried Chrome and Safari, on my laptop and a colleague's, and created a second account to rule out a bad login. Contact import is the only thing blocking our evaluation; everything else in the account works. We have a board review on Thursday and want to demonstrate the product.' What should support do first?</p>
+      <p class="opts"><strong>escalate_engineering</strong> — Escalate to engineering as a reproducible defect with a same-day target, since a dated commitment is about to turn a recoverable trial into a lost deal.<br><strong>send_guide</strong> — Send the import troubleshooting guide and ask them to retry with a smaller file.<br><strong>offer_demo</strong> — Offer a screen-share walkthrough so they have something working to show on Thursday.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">escalate_engineering</td><td class="mono yes">escalate_engineering</td><td class="mono no">offer_demo</td><td class="mono yes">escalate_engineering</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: Two browsers, two machines and two accounts reproducing it removes the customer's setup as a variable, and only engineering can unblock the single feature standing between them and a Thursday commitment.</p>
+      <p class="sub" style="margin-top:4px">The smaller-file guide and the demo offer are real support moves that both treat it as a solvable user problem.</p>
+    </details>
+<details><summary>
+        <code>diag-tls-path-specific</code> <span class="sub">diagnosis · choice</span>
+      </summary>
+      <p class="q">A client on a private corporate network gets 'certificate has expired' from an internal API, while the same client reaching the identical hostname over the company VPN works fine. Both paths terminate TLS at the same load balancer. The client's own clock is synchronised to within 4 seconds of network time, and the certificate presented on the VPN path is valid until March 2027. What is the probable cause?</p>
+      <p class="opts"><strong>path_reencrypt</strong> — The private path re-encrypts with a different, short-lived certificate from an intermediate appliance, so that path presents an expired or wrong certificate.<br><strong>client_clock</strong> — The client clock has drifted far enough for it to reject a certificate that is genuinely still valid.<br><strong>server_clock</strong> — The load balancer's clock is wrong, so its own valid certificate is being read as expired.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">path_reencrypt</td><td class="mono no">client_clock</td><td class="mono no">server_clock</td><td class="mono yes">path_reencrypt</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: One terminator succeeding on one path rules out the server and its certificate, and a measured 4-second skew rules out the client, leaving only the certificate actually put on the wire by the private path.</p>
+      <p class="sub" style="margin-top:4px">Wants elimination rather than pattern-matching on the string 'certificate has expired'.</p>
+    </details>
+<details><summary>
+        <code>diag-oom-linear-input</code> <span class="sub">diagnosis · choice</span>
+      </summary>
+      <p class="q">A nightly batch job that processed 3 million rows in 4 minutes ran fine until the host was resized down from 8 GB to 6 GB during a cost review; it is now killed by the OOM killer after 25 minutes. Over the same period the input file grew 3x, from 3 million to 9 million rows. The job's memory high-water mark is almost exactly 3x its previous value, measured over three runs, and the code loads every row into an in-memory list before doing any work. 8 GB is the largest size the provider offers for this machine type, and three other services on the host need their 2 GB, so the job cannot be given more memory. What is the right fix?</p>
+      <p class="opts"><strong>stream_input</strong> — Process the input as a stream so memory is bounded by the processing window rather than the row count.<br><strong>more_memory</strong> — Give the host more RAM so the larger file fits.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">stream_input</td><td class="mono no">more_memory</td><td class="mono no">more_memory</td><td class="mono yes">stream_input</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: Because memory tracks row count exactly and the host is already at its ceiling, the only change that survives the next growth in input is one that stops memory depending on row count at all.</p>
+      <p class="sub" style="margin-top:4px">The more_memory distractor is what laya and julia both chose when probed, and it is the right answer on a host with RAM to spare, so the host ceiling is what makes this case decidable.</p>
+    </details>
+<details><summary>
+        <code>diag-intermittent-500-replica</code> <span class="sub">diagnosis · choice</span>
+      </summary>
+      <p class="q">An API returns HTTP 500 on about 0.5% of requests. Every 500 has the same body: 'upstream connect error or disconnect/reset before headers', which is the message a Node.js undici connection pool emits. The service runs three identical replicas behind a load balancer. The per-replica error rate changes after every deploy: one replica frequently goes from 0.1% to 2% and back on the next deploy, while the other two stay flat. What is the likely root cause?</p>
+      <p class="opts"><strong>one_bad_replica</strong> — One replica carries bad connection-pool or resolver state after deploy, so requests routed to it fail while the others are healthy.<br><strong>short_timeout</strong> — The request timeout is too short, so genuinely slow upstreams are being cut off.<br><strong>uneven_lb</strong> — The load balancer is distributing traffic unevenly, so some replicas are running hot.<br><strong>add_retries</strong> — Clients need retries, so a brief upstream blip is being surfaced to callers as a 500.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">one_bad_replica</td><td class="mono yes">one_bad_replica</td><td class="mono no">short_timeout</td><td class="mono yes">one_bad_replica</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: A per-replica rate that rises and falls with deploys, with one fixed error signature and two untouched replicas, is a property of process state rather than of load or timeout, and retries would only mask a fault that recurs on the same instance.</p>
+      <p class="sub" style="margin-top:4px">The deploy-correlated per-replica split is the discriminator; retries and the load balancer are the hasty picks.</p>
+    </details>
+<details><summary>
+        <code>diag-scheduler-dst</code> <span class="sub">diagnosis · noul</span>
+      </summary>
+      <p class="q">A job is configured to run daily at 02:00 local server time. After the clocks went forward in March it did not run that day at all; after they went back in October it ran twice, an hour apart. The scheduling daemon is the standard cron on the same host and has not been restarted or reconfigured since the job was created. A colleague proposes installing a different scheduler because 'cron is buggy with DST'. Is that the right diagnosis?</p>
+      <p class="opts"><strong>false</strong> — Yes - the scheduler is faulty, so replacing it will stop the missed and duplicated runs.<br><strong>true</strong> — No - the job is defined against a local wall-clock time, so the DST transition moves the 02:00 instant out from under it.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">true</td><td class="mono no">false</td><td class="mono no">false</td><td class="mono yes">true</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: A wall-clock schedule has no 02:00 on a spring-forward day and two on a fall-back day, which is arithmetic rather than a daemon defect, and the same job expressed in UTC would behave correctly.</p>
+      <p class="sub" style="margin-top:4px">The 'replace the scheduler' proposal is an expensive fix aimed at the symptom.</p>
+    </details>
+<details><summary>
+        <code>diag-vram-spill-not-failure</code> <span class="sub">diagnosis · noul</span>
+      </summary>
+      <p class="q">A 7B model that ran entirely on the VRAM of a Radeon RX 9070 XT is now roughly 8x slower. `rocm-smi` shows VRAM allocated dropping to near zero during inference while system RAM climbs. The model file and the application are both unchanged. Last week's `arch -up` updated linux-amdgpu, the ROCm libraries and the Vulkan RADV driver together. The user concludes: 'the GPU is broken, I need a new card.' Is that the right conclusion?</p>
+      <p class="opts"><strong>false</strong> — Yes - the GPU has failed and needs replacing, since it worked before the update.<br><strong>true</strong> — No - the card is fine; the driver update reduced the VRAM available, so the model now overflows into system RAM.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">true</td><td class="mono no">false</td><td class="mono yes">true</td><td class="mono yes">true</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: VRAM allocation collapsing to near zero while host RAM rises is an overflow, not a failure, and a driver update that changes the reported VRAM budget explains the timing with no hardware fault involved.</p>
+      <p class="sub" style="margin-top:4px">Separating 'got slower' from 'is broken'. The purchase conclusion is the costly wrong answer.</p>
+    </details>
+<details><summary>
+        <code>diag-usb-c-power-budget</code> <span class="sub">diagnosis · choice</span>
+      </summary>
+      <p class="q">A laptop with a USB-C dock loses both external monitors - they go dark for 1.5 to 2 seconds then return, with no error message - but only while a large file is being written to an external SSD through the same dock. The internal display is unaffected, and wired Ethernet through the dock stays up throughout. The dock is a 100 W passthrough model plugged into a port the machine's spec sheet rates at 40 W. The identical dock and SSD on a 65 W port has never dropped. What is the likely cause?</p>
+      <p class="opts"><strong>power_delivery</strong> — The dock draws more than the port can supply once the SSD spins up, so the display links renegotiate and briefly drop.<br><strong>display_cables</strong> — The display cables are marginal and the SSD's read and write activity is coincidental.<br><strong>ssd_failing</strong> — The external SSD is failing, and its error retries are disturbing the bus.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">power_delivery</td><td class="mono no">display_cables</td><td class="mono yes">power_delivery</td><td class="mono yes">power_delivery</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: Moving to a 65 W port removes the fault while the same writes still occur, which isolates supply capacity and clears both the cables and the drive; displays renegotiating is precisely what a momentary power deficit produces.</p>
+      <p class="sub" style="margin-top:4px">The port-wattage comparison is the discriminator, so the answer is determined rather than guessed.</p>
+    </details>
+<details><summary>
+        <code>diag-healthcheck-flapping-severity</code> <span class="sub">diagnosis · score</span>
+      </summary>
+      <p class="q">A service's health check fails about once every 40 minutes, always for roughly 8 seconds, then recovers with no operator action. The failing requests log 'server misbehaving' from the upstream. Nothing else is degraded during those windows, and a second identical service behind the same load balancer has never failed a health check. How serious is this as a fault?</p>
+      <p class="opts"><strong>0</strong> — Not a fault - an occasional blip with no effect on users.<br><strong>1</strong> — A real fault with a contained effect - a few requests fail, recovery is automatic, and nothing degrades further.<br><strong>2</strong> — An active outage - users are being served errors and the service is at risk of failing entirely.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">A real fault with a contained effect - a few requests fail, recovery is automatic, and nothing degrades further.</td><td class="mono yes">1</td><td class="mono yes">1</td><td class="mono no">0</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: Users do see errors, so it is not nothing, but the service self-recovers inside a minute with no degradation cascade, which is a real defect on a short cycle rather than an outage.</p>
+      <p class="sub" style="margin-top:4px">Severity calibration against a periodic health-check failure that looks alarming in the logs.</p>
+    </details>
+<details><summary>
+        <code>diag-disk-latency-severity</code> <span class="sub">diagnosis · score</span>
+      </summary>
+      <p class="q">A database node's p99 query latency went from 8 ms to 340 ms overnight with no configuration change and no deploy. Disk await accounts for 310 ms of it, the device reports 0% read errors, SMART shows no reallocated and no pending sectors, and CPU sits at 12%. The node is also serving an unrelated nightly `find` across a 4 TB volume that started 12 hours before the regression and is still running. Results are correct. How serious is this as a fault?</p>
+      <p class="opts"><strong>0</strong> — Not a fault - a one-off measurement artifact that will not recur.<br><strong>1</strong> — A real problem but tolerable - slow queries, correct results, and it clears on its own.<br><strong>2</strong> — A genuine regression needing action - sustained latency loss, with no data loss yet.<br><strong>3</strong> — An outage - data loss, corruption, or requests failing outright.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">A genuine regression needing action - sustained latency loss, with no data loss yet.</td><td class="mono no">1</td><td class="mono yes">2</td><td class="mono no">1</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: The await breakdown and the concurrent full-volume scan account for the latency while results stay correct and the device reports no fault, so it needs a decision but it is not destroying anything.</p>
+      <p class="sub" style="margin-top:4px">Separates 'slow' from 'broken'. The clean SMART and 0% errors are there to rule out level 3.</p>
+    </details>
+<details><summary>
+        <code>diag-log-rotation-gap-severity</code> <span class="sub">diagnosis · score</span>
+      </summary>
+      <p class="q">A service's logs stop at 14:00 with no error of any kind, and the messages from before 14:00 are present. The current log file is 4 KB. The previous file was removed at exactly 14:00, and it was not compressed. The service's configured MaxFileSize is 1 MB and it writes about 2 MB an hour. The rest of the service is healthy and no trace was lost from the process itself. How serious is this?</p>
+      <p class="opts"><strong>0</strong> — Not a fault - the file was rotated at its configured size limit, so the gap is expected behaviour of a best-effort sink.<br><strong>1</strong> — A real fault - rotation is dropping messages that had not been flushed to disk.<br><strong>2</strong> — Urgent - log loss is destroying the evidence needed for an active investigation.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">Not a fault - the file was rotated at its configured size limit, so the gap is expected behaviour of a best-effort sink.</td><td class="mono no">1</td><td class="mono yes">0</td><td class="mono yes">0</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: The file is a few KB after a removal at 14:00 and the service writes 2 MB an hour against a 1 MB cap, so rotation fired exactly when it was configured to and an unflushed tail is how a non-durable sink behaves.</p>
+      <p class="sub" style="margin-top:4px">A rotation timestamp that looks like an outage. The ordering of the facts - removal at 14:00, small current file, size cap exceeded hourly - is the discriminator.</p>
+    </details>
+<details><summary>
+        <code>desktop-wifi-client-vs-network</code> <span class="sub">desktop · noul</span>
+      </summary>
+      <p class="q">On an Arch laptop with Hyprland, `iw` reports an 866 Mbit/s link to a 5 GHz office access point at -52 dBm, but a 1 GB file uploads to the office NAS at 3 Mbit/s while downloads run at 200 Mbit/s. A phone associated with the same SSID on the same access point uploads the same file at 60 Mbit/s. No other laptop on that network shows this behaviour. Is the laptop at fault?</p>
+      <p class="opts"><strong>false</strong> — Yes - the fault is on the laptop, in its driver, power saving, or configuration.<br><strong>true</strong> — No - the fault is on the network or the access point, since another client on the same AP uploads normally.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">false</td><td class="mono no">true</td><td class="mono no">true</td><td class="mono yes">false</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: A second client on the same SSID and access point achieves a normal upload while this one machine alone is capped at 3 Mbit/s, which isolates the cause to the laptop's own stack rather than to the airtime or the uplink.</p>
+      <p class="sub" style="margin-top:4px">The control client is what makes this answerable. Without the phone, the strong link and dBm reading would point the wrong way.</p>
+    </details>
+<details><summary>
+        <code>desktop-btrfs-full-reclaim</code> <span class="sub">desktop · choice</span>
+      </summary>
+      <p class="q">The root filesystem on Arch is full: writes fail with 'No space left on device' and `df -h /` shows 100% used. `btrfs filesystem usage /` reports 1.2 GiB free, 2.1 TiB allocated and 1.5 TiB unallocated. Snapshots from the linux pacman hook, snapper and timeshift are all present, the oldest retained snapshot is 2 months old, and `btrfs filesystem df /` shows Data and Metadata both at 100%. Nothing outside / is short of space. What should be done?</p>
+      <p class="opts"><strong>prune_and_balance</strong> — Delete old snapshots, then run a balance so the unallocated chunks are redistributed and become usable.<br><strong>grow_partition</strong> — Enlarge the partition and then the filesystem, since the block device has spare capacity.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">prune_and_balance</td><td class="mono yes">prune_and_balance</td><td class="mono no">grow_partition</td><td class="mono yes">prune_and_balance</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: Unallocated chunks are space Btrfs holds but does not hand out until a balance redistributes it, so pruning plus balancing is what actually returns the capacity, and growing the block device would not change the allocation at all.</p>
+      <p class="sub" style="margin-top:4px">Distinguishing 'df is full' from 'the device is full', which is a long-standing Btrism and a plausible-sounding wrong turn.</p>
+    </details>
+<details><summary>
+        <code>desktop-hyprland-hidden-workspace</code> <span class="sub">desktop · choice</span>
+      </summary>
+      <p class="q">On Hyprland, applications launch but no window ever appears. `hyprctl clients` lists two windows on workspace 3 and `hyprctl activeworkspace` reports workspace 3, but the screen shows only the desktop background. Moving the pointer over the bar still highlights the entries, and `hyprctl dispatch workspace 2` followed by `workspace 3` changes nothing. `hyprctl monitors` is normal and the compositor log has no errors. An Omarchy config update last week added a line to hyprland.conf for workspace 3. What should be tried first?</p>
+      <p class="opts"><strong>unhide_workspace</strong> — Check workspace 3's config line for the hidden keyword, remove it, and reload with `hyprctl reload`.<br><strong>kill_windows</strong> — Kill the stuck windows with `hyprctl dispatch killwindow active` and relaunch the applications.<br><strong>reinstall_hyprland</strong> — Reinstall the Hyprland configuration to its defaults and rebuild the setup from scratch.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">unhide_workspace</td><td class="mono no">kill_windows</td><td class="mono no">reinstall_hyprland</td><td class="mono yes">unhide_workspace</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: Hyprland is tracking and enumerating the windows correctly, so they are not stuck; a workspace marked hidden is composited away while remaining active, and a config line added a week ago is exactly the sort of change that introduces one.</p>
+      <p class="sub" style="margin-top:4px">Windows that exist and are tracked but never composited. The reinstall option is expensive and would not even touch a bad line in a user config.</p>
+    </details>
+<details><summary>
+        <code>desktop-bluetooth-second-device-control</code> <span class="sub">desktop · noul</span>
+      </summary>
+      <p class="q">A user reports 'Bluetooth is broken, nothing pairs'. `bluetoothctl` shows the controller present and powered, `bluetoothctl show` lists a paired device, `systemctl status bluetooth` is active, and the Bluetooth log repeats 'Failed to connect to ...: br-connection-canceled' for the one headset they use. That headset works when paired with a phone. Pairing a different, brand-new headset through the desktop settings also fails at the same step. Is the user's headset faulty?</p>
+      <p class="opts"><strong>false</strong> — Yes - the headset is faulty and should be replaced or returned.<br><strong>true</strong> — No - the headset is fine; the desktop's connection attempt is being cancelled locally, before any link is established.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">true</td><td class="mono no">false</td><td class="mono no">false</td><td class="mono yes">true</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: A second and different headset fails at the identical step, so the common factor is the desktop's Bluetooth stack rather than the hardware being paired with.</p>
+      <p class="sub" style="margin-top:4px">The second-device control is what separates hardware failure from a local stack problem; with only one headset the case would be genuinely ambiguous.</p>
+    </details>
+<details><summary>
+        <code>desktop-amdgpu-suspend-panel</code> <span class="sub">desktop · noul</span>
+      </summary>
+      <p class="q">On an Omarchy laptop with Hyprland and an AMD GPU, closing the lid suspends and reopening works: the external monitor over USB-C shows the desktop, but the built-in panel stays black until the lid is closed and opened a second time. The kernel log shows, at suspend, 'amdgpu: Timeout waiting for RPC response' and at resume, 'failed to resume device'. This began after `arch -up` updated linux-amdgpu, mesa and linux-firmware. The same external monitor shows a picture every time, and a colleague with a two-year-old identical laptop reports the panel is fine. Is the panel hardware failing?</p>
+      <p class="opts"><strong>false</strong> — Yes - the panel or its cable is failing and should be replaced.<br><strong>true</strong> — No - the GPU failed to suspend and resume cleanly, leaving the internal display unlit, which is a driver or firmware path rather than panel hardware.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">true</td><td class="mono no">false</td><td class="mono no">false</td><td class="mono yes">true</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: The external display working proves the graphics stack resumes, and the kernel log names a failed device resume on the internal path, neither of which a dying panel would produce.</p>
+      <p class="sub" style="margin-top:4px">The kernel message is the evidence separating a driver or firmware fault from panel hardware; the hardware-replacement conclusion is the expensive one.</p>
+    </details>
+<details><summary>
+        <code>desktop-suspend-orphaned-session</code> <span class="sub">desktop · choice</span>
+      </summary>
+      <p class="q">A Hyprland session on Arch is not restored after resume from suspend: the compositor comes back but every window is gone, and `hyprctl clients` is empty even though the application processes are still running. `systemctl --user status hyprland` shows the unit active, and the same thing happens whether the lid is closed or `systemctl suspend` is run from a terminal. The log shows the compositor starting a new session, and no window appears in any workspace. Nothing on the system was changed before this began, and it has reproduced on every suspend since. The compositor's own log records a new session id at each resume, and no window is ever registered with it afterwards, although a full logout and login on this machine has brought the windows back every time. What should be tried first?</p>
+      <p class="opts"><strong>restart_session</strong> — Log out and back in, or restart the compositor session, so the application processes are restarted under a new session rather than orphaned.<br><strong>kill_leftovers</strong> — Kill every application process left over from the previous session, then relaunch them.<br><strong>rollback_update</strong> — Roll the system back several package versions to before the most recent upgrade and retest.<br><strong>delete_state</strong> — Delete the Hyprland state and cache directories, then relaunch the compositor.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">restart_session</td><td class="mono yes">restart_session</td><td class="mono yes">restart_session</td><td class="mono no">delete_state</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: The compositor is starting a fresh session while the old processes survive, so what it lost is its list of tracked clients, and only re-establishing the session rebuilds that; killing processes cannot re-register windows with a compositor that has already forgotten them.</p>
+      <p class="sub" style="margin-top:4px">The discriminator is that the compositor is alive but tracking no clients, and that re-establishing the session is the one recovery that has worked. Deliberately does not rule out the other options by name.</p>
+    </details>
+<details><summary>
+        <code>desktop-swap-usage-severity</code> <span class="sub">desktop · score</span>
+      </summary>
+      <p class="q">A workstation with 32 GB of RAM has been up 30 days and shows 4.2 GB of swap in use. `vmstat` reports si and so both at 0 the whole time. `free` shows 3.1 GB available and 24 GB in buff/cache. A heavy application first opened three weeks ago is still mapped. Compile times and responsiveness match a machine that has just rebooted. How serious is the swap usage?</p>
+      <p class="opts"><strong>0</strong> — Not a problem - populated but idle swap is normal, and pages are only faulted back when referenced, which is not happening.<br><strong>1</strong> — Worrying - swap in use means the machine has been under memory pressure.<br><strong>2</strong> — Urgent - the machine is thrashing and work is badly degraded right now.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">Not a problem - populated but idle swap is normal, and pages are only faulted back when referenced, which is not happening.</td><td class="mono no">1</td><td class="mono no">1</td><td class="mono yes">0</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: Swap that was written to and is now completely idle with zero pages coming back in is the signature of a burst that has since been released, and 3 GB available plus 24 GB of reclaimable cache means there is no current pressure.</p>
+      <p class="sub" style="margin-top:4px">Reading 'swap is non-zero' as pressure. The zero si and so and the healthy performance are what make it not a fault.</p>
+    </details>
+<details><summary>
+        <code>desktop-display-link-training-severity</code> <span class="sub">desktop · score</span>
+      </summary>
+      <p class="q">A second 1440p monitor is attached to a workstation over DisplayPort. About once an hour, for one to two seconds, that monitor goes black and returns, while the main display keeps running and no application reports an error. The kernel log shows 'link training failed' on the DP bus at each occurrence. The cable is a 2 m DP run under a desk and worked without drops for eight months until the desk was moved. Re-seating both ends of the cable has not changed anything. How serious is this?</p>
+      <p class="opts"><strong>0</strong> — Not a problem - an occasional cosmetic blip with no effect on work.<br><strong>1</strong> — Annoying but workable - the display drops occasionally, and replacing the cable is an available fix.<br><strong>2</strong> — Blocking - the display is unusable for work that depends on it and nothing helps.<br><strong>3</strong> — A hardware risk - continued use risks damage or permanent loss of the display.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">Annoying but workable - the display drops occasionally, and replacing the cable is an available fix.</td><td class="mono no">2</td><td class="mono no">0</td><td class="mono yes">1</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: The drops are seconds long with the main display unaffected, and link retraining on a disturbed cable run is mechanical and replaceable, so it is something to schedule a cable swap around rather than a blocker.</p>
+      <p class="sub" style="margin-top:4px">Link-training failures after a cable route is disturbed point at the cable, not the GPU. Level 2 would need a task that cannot survive any drop.</p>
+    </details>
+<details><summary>
+        <code>judge-gift-card-phish</code> <span class="sub">judgment · choice</span>
+      </summary>
+      <p class="q">An email arrives at the finance inbox from 'Marcus Ellery, CEO': 'In back-to-back meetings. Need six $200 gift cards sent to the team at this address for a client thank-you. Do not delay, reply with the codes when done. This is confidential, do not discuss with IT.' The display name and profile photo are the real Marcus's. The From address is `m.ellery@contoso-group.com` and that domain's SPF record fails validation; the Reply-To is `m.ellery@contoso-billing.co`. Marcus is abroad and his mobile is not answering. What do you do?</p>
+      <p class="opts"><strong>verify_and_report</strong> — Act on nothing: verify out of band on a number already in the directory, and report the message as phishing in the mail provider.<br><strong>reply_to_confirm</strong> — Reply to the sender asking Marcus to confirm the request before sending anything.<br><strong>forward_to_check</strong> — Forward it to a colleague whose job is spotting phishing and let them decide what to do.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">verify_and_report</td><td class="mono yes">verify_and_report</td><td class="mono no">forward_to_check</td><td class="mono yes">verify_and_report</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: Gift cards demanded by reply, with a failing SPF and a reply-to on an unaligned domain, is a known fraud shape, so replying tells the attacker their address is live and forwarding hands the decision to someone who can authenticate it no better.</p>
+      <p class="sub" style="margin-top:4px">The 'get a second opinion' option is realistic, but a colleague cannot verify out of band what the sender's own channel has just asserted.</p>
+    </details>
+<details><summary>
+        <code>judge-friday-deploy</code> <span class="sub">judgment · choice</span>
+      </summary>
+      <p class="q">It is Friday at 16:40 local time. A one-line CSS change to the colour of the checkout page's pay button has been reviewed and approved. The production deploy window closes at 17:00. Nobody on the team will be reachable until Monday 09:00, and a full rollback takes about four minutes to complete. A similar CSS change deployed on a previous Friday caused a partial outage that ran for 20 minutes and was not noticed until Monday morning. Should you deploy now?</p>
+      <p class="opts"><strong>deploy_now</strong> — Deploy now inside the window - the change is one line and a rollback only takes four minutes.<br><strong>deploy_monday</strong> — Hold it until Monday morning, when someone is awake to watch the metrics after it ships.<br><strong>deploy_and_announce</strong> — Deploy now and post the change in the team channel so people will look at it on Monday.<br><strong>deploy_and_monitor</strong> — Deploy now after adding a temporary alert on the checkout page and notifying the on-call rotation.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">deploy_monday</td><td class="mono no">deploy_now</td><td class="mono no">deploy_and_announce</td><td class="mono no">deploy_now</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: A four-minute rollback is worthless when nobody is awake to run it, and this team's own history shows a Friday CSS change failing silently for a day; waiting four hours costs nothing that Monday morning cannot recover.</p>
+      <p class="sub" style="margin-top:4px">The 'add an alert and notify on-call' option is the strongest distractor, and the previous-Friday incident is what tips it.</p>
+    </details>
+<details><summary>
+        <code>judge-privacy-escalation-severity</code> <span class="sub">judgment · score</span>
+      </summary>
+      <p class="q">It is 02:00 and you are on call. You have just confirmed and fixed a defect that let any signed-in user read other users' private notes for about 90 minutes before it was deployed. You have the timeline. The fix has not been announced, legal and comms are not in the incident channel, and you are not authorised to make a public statement. The company operates in a jurisdiction with a 72-hour notification clock that starts at awareness. How severe is the handling decision you are facing?</p>
+      <p class="opts"><strong>0</strong> — Hold it - the fix is deployed and there is nothing that needs doing tonight.<br><strong>1</strong> — Note it in the incident log and raise it with the team first thing in the morning.<br><strong>2</strong> — Escalate tonight to the incident commander and the privacy owner so the clock starts deliberately.<br><strong>3</strong> — Publish the exposure now and let comms correct the framing afterwards if needed.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">Escalate tonight to the incident commander and the privacy owner so the clock starts deliberately.</td><td class="mono no">1</td><td class="mono no">3</td><td class="mono yes">2</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: The clock runs from awareness rather than from a comms decision, so sitting on it until morning spends hours of a 72-hour window that cannot be recovered, while the statement itself still belongs to the incident commander and not to an engineer at 02:00.</p>
+      <p class="sub" style="margin-top:4px">The levels are action urgency, not severity. The top level is the deliberate over-correction: escalate, do not self-disclose.</p>
+    </details>
+<details><summary>
+        <code>judge-laptop-battery-spend</code> <span class="sub">judgment · score</span>
+      </summary>
+      <p class="q">Your daily-work laptop's battery now holds 61% of design capacity and gives 5 hours of mixed use. A genuine replacement battery for this machine, fitted, costs $130 with a 12-month warranty. An equivalent used machine from 2023, tested at 94% battery health with a fresh SSD, costs $520 and carries no warranty. You need a machine you can rely on for 2 more years of daily work. How severe is the risk in choosing the $130 battery?</p>
+      <p class="opts"><strong>0</strong> — Negligible - both options are cheap enough that being wrong costs little.<br><strong>1</strong> — Meaningful - a wrong choice wastes most of a real budget, though neither option is hard to undo.<br><strong>2</strong> — Severe - the wrong choice leaves you without a usable machine for weeks or costs most of a month's pay.</p>
+      <table>
+        <tr><th>expected</th><th>laya</th><th>julia</th><th>rizzo</th></tr>
+        <tr><td class="mono">Meaningful - a wrong choice wastes most of a real budget, though neither option is hard to undo.</td><td class="mono yes">1</td><td class="mono no">2</td><td class="mono yes">1</td></tr>
+      </table>
+      <p class="why" style="margin-top:10px">Ground truth: A fourfold price difference over a two-year horizon is a real budget decision, but a battery can be swapped again in an hour, so the downside is wasted money rather than being stranded without a machine.</p>
+      <p class="sub" style="margin-top:4px">Proportionality. A reversible, priced decision is a real but bounded risk, not a catastrophe.</p>
+    </details>
+<h2>Method</h2>
+<div class="card">
+    <p>Every model is sent the same questions, in the same order, with the same text. The only per-model
+    difference is the <code>state</code> wrapper: laya and rizzo reject a bare string, julia rejects an
+    object, so the text is identical and only the container differs.</p>
+    <p>None of the three generate text — each returns a distribution over the options and the harness reads
+    its argmax. There is no temperature and no seed. The determinism check asks every case twice and confirms
+    the answers are identical, which is what makes a single run's differences meaningful rather than noise.</p>
+    <p>Corpora are hashed, so a changed corpus is visible in the output rather than silently comparing
+    different things. Per-corpus rows are always shown next to any blended figure.</p>
+  </div>
+<footer>
+    Generated from 3 runs:
+    <code>ab-2026-09-29T00-23-31.json</code>, <code>ab-2026-09-29T00-23-51.json</code>, <code>ab-2026-09-29T00-28-09.json</code>.<br>
+    Harness: <code>~/Work/ab</code>. Models served locally by onesystem on the RX 9070 XT.
+  </footer>
+</div></body></html>

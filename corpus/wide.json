@@ -1,0 +1,507 @@
+{
+  "name": "wide",
+  "questions": [
+    {
+      "id": "w2-service-owner",
+      "type": "choice",
+      "task": "operations",
+      "instructions": "A service has no named owner. What should happen first?",
+      "criteria": {
+        "assign_team": "Assign a team as owner before any further work is scheduled against it",
+        "proceed_anyway": "Proceed and assign an owner later if someone happens to notice"
+      },
+      "answer": "assign_team",
+      "note": "Two options, to stay comparable with the default corpus."
+    },
+    {
+      "id": "w3-rollout-strategy",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A risky change needs to reach production. Which rollout strategy?",
+      "criteria": {
+        "canary": "Canary to a small slice, watch metrics, then widen",
+        "blue_green": "Stand up a parallel environment and cut over when it looks healthy",
+        "big_bang": "Ship to everything at once during a quiet period"
+      },
+      "answer": "canary",
+      "note": "Three options. Measures whether extra labels degrade either model."
+    },
+    {
+      "id": "w4-incident-severity",
+      "type": "choice",
+      "task": "operations",
+      "instructions": "Checkout is failing for 30% of users in one region. Severity?",
+      "criteria": {
+        "sev1": "Sev 1: revenue is actively lost, page everyone and treat as all-hands",
+        "sev2": "Sev 2: significant but bounded, page the on-call and mitigate today",
+        "sev3": "Sev 3: degraded for some users, fix on the normal schedule"
+      },
+      "answer": "sev1"
+    },
+    {
+      "id": "w3-schema-change",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A table needs a new NOT NULL column with no default. Which migration?",
+      "criteria": {
+        "nullable_backfill": "Add it nullable, backfill in batches, then add the constraint",
+        "default_instant": "Add it with a constant default in a single statement",
+        "truncate_recreate": "Write a new table with the constraint and copy rows over"
+      },
+      "answer": "nullable_backfill"
+    },
+    {
+      "id": "w2-test-determinism",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A test passes alone and fails in the suite. What is the likely cause?",
+      "criteria": {
+        "shared_state": "Shared state between tests, so isolate the fixture or reset it per test",
+        "machine_load": "The machine is more loaded during the suite, so raise the timeout"
+      },
+      "answer": "shared_state"
+    },
+    {
+      "id": "w3-log-levels",
+      "type": "choice",
+      "task": "operations",
+      "instructions": "Debug logging is expensive. What should be reduced?",
+      "criteria": {
+        "debug_only": "Turn off debug, keep info and above",
+        "info_and_above": "Turn off info as well, keep warnings only",
+        "sample_debug": "Sample debug lines to a fraction and keep everything else"
+      },
+      "answer": "debug_only"
+    },
+    {
+      "id": "w2-api-pagination",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "An endpoint returns unbounded lists. What should it do?",
+      "criteria": {
+        "paginate": "Require a limit and return a cursor, defaulting to a small page",
+        "truncate": "Return the first N silently and note the total separately"
+      },
+      "answer": "paginate"
+    },
+    {
+      "id": "w3-rewrite-decision",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A legacy module is painful to change. What is the right response?",
+      "criteria": {
+        "incremental": "Add tests at the seam and refactor in small steps as you touch it",
+        "rewrite": "Rewrite the module in one pass against the current tests",
+        "leave": "Leave it and add comments explaining the constraints"
+      },
+      "answer": "incremental"
+    },
+    {
+      "id": "w2-credential-storage",
+      "type": "choice",
+      "task": "security",
+      "instructions": "Where should a database password live?",
+      "criteria": {
+        "secret_manager": "A secret manager, injected at runtime and never in the repo",
+        "env_file": "A gitignored .env file on each host"
+      },
+      "answer": "secret_manager",
+      "note": "Both are defensible in small setups; the intended answer assumes a hosted secret store."
+    },
+    {
+      "id": "w3-observability-first",
+      "type": "choice",
+      "task": "operations",
+      "instructions": "Before refactoring an unmonitored service, what should come first?",
+      "criteria": {
+        "instrument": "Add metrics, logs and traces so the refactor has a baseline",
+        "refactor_first": "Refactor first and add instrumentation afterwards",
+        "manual_checks": "Add a manual runbook and check by hand after each change"
+      },
+      "answer": "instrument"
+    },
+    {
+      "id": "w2-retry-storm",
+      "type": "choice",
+      "task": "operations",
+      "instructions": "A flaky dependency causes clients to retry in lockstep. What prevents the storm?",
+      "criteria": {
+        "jitter_backoff": "Exponential backoff with jitter on the client",
+        "shorter_timeout": "A shorter client timeout so retries happen sooner"
+      },
+      "answer": "jitter_backoff"
+    },
+    {
+      "id": "w3-dependency-conflict",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "Two dependencies require incompatible versions of a shared library. What now?",
+      "criteria": {
+        "pin_and_isolate": "Pin one version and isolate the other behind an interface you own",
+        "force_resolve": "Force the resolver to pick one and hope nothing breaks",
+        "drop_one": "Drop whichever dependency is less central and rebuild"
+      },
+      "answer": "pin_and_isolate"
+    },
+    {
+      "id": "w2-monolith-split",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A monolith is hard to deploy. What is the first step?",
+      "criteria": {
+        "carve_service": "Extract one well-bounded component behind a network boundary",
+        "split_all": "Split the codebase into services along directory lines"
+      },
+      "answer": "carve_service"
+    },
+    {
+      "id": "w4-error-taxonomy",
+      "type": "choice",
+      "task": "design",
+      "instructions": "How should a library classify errors?",
+      "criteria": {
+        "typed_hierarchy": "A typed hierarchy the caller can match on, distinct from unexpected faults",
+        "strings": "Error strings the caller pattern-matches, for simplicity"
+      },
+      "answer": "typed_hierarchy",
+      "note": "Two labels despite the id, kept deliberately to compare 2-way and 4-way handling."
+    },
+    {
+      "id": "w3-cache-warmup",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A cold cache makes the first requests after deploy very slow. What helps?",
+      "criteria": {
+        "prewarm": "Prewarm the cache during deploy before shifting traffic",
+        "scale_up": "Scale up the fleet so the slow first requests are absorbed",
+        "stagger": "Stagger the deploy so instances warm at different times"
+      },
+      "answer": "prewarm"
+    },
+    {
+      "id": "w2-idempotent-deploy",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A deploy script fails halfway. What property matters most?",
+      "criteria": {
+        "rerunnable": "Running it again converges rather than compounding the damage",
+        "rollback": "It can automatically restore the previous release"
+      },
+      "answer": "rerunnable"
+    },
+    {
+      "id": "w3-schema-registry",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "Several services consume events from one producer. How should the contract be managed?",
+      "criteria": {
+        "registry": "A schema registry with compatibility checks in CI",
+        "wiki": "A wiki page documenting the event shapes",
+        "implicit": "Consumers read the producer's code and rely on tests"
+      },
+      "answer": "registry"
+    },
+    {
+      "id": "w2-timeouts",
+      "type": "choice",
+      "task": "operations",
+      "instructions": "A downstream call has no timeout. What is the risk?",
+      "criteria": {
+        "exhaustion": "Threads pile up waiting on a call that never returns, exhausting the pool",
+        "slow_only": "Requests are merely slow, which the load balancer absorbs"
+      },
+      "answer": "exhaustion"
+    },
+    {
+      "id": "w3-oncall-handoff",
+      "type": "choice",
+      "task": "operations",
+      "instructions": "How should on-call handoffs work between people?",
+      "criteria": {
+        "written_summary": "A written summary of open incidents and recent changes, read aloud",
+        "verbal_only": "A verbal walkthrough, since writing it up wastes time"
+      },
+      "answer": "written_summary"
+    },
+    {
+      "id": "w2-nondeterminism",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A build produces different bytes for the same source. What is the fix?",
+      "criteria": {
+        "pin_inputs": "Pin every input including timestamps and toolchain versions",
+        "retry": "Rebuild until the output matches the previous one"
+      },
+      "answer": "pin_inputs"
+    },
+    {
+      "id": "w3-feature-flags-lifecycle",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "When should a feature flag be removed?",
+      "criteria": {
+        "after_full_rollout": "Once the rollout is complete and the old path is dead",
+        "never": "Never, so the flag can gate a future rollback",
+        "quarterly": "On a fixed quarterly schedule regardless of rollout state"
+      },
+      "answer": "after_full_rollout"
+    },
+    {
+      "id": "w2-backup-restore",
+      "type": "choice",
+      "task": "operations",
+      "instructions": "Backups run nightly and have never been restored. What is the real state?",
+      "criteria": {
+        "unproven": "There is no backup until a restore has been verified end to end",
+        "fine": "The backups exist on disk, which is the same thing"
+      },
+      "answer": "unproven"
+    },
+    {
+      "id": "w3-api-compat",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A public API adds an optional field. What is required of consumers?",
+      "criteria": {
+        "nothing": "Nothing, since it is optional and additive",
+        "regenerate": "Regenerate client types and redeploy before relying on it"
+      },
+      "answer": "nothing"
+    },
+    {
+      "id": "w2-session-sticky",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A load balancer sends a user's requests to different instances and sessions break. Fix?",
+      "criteria": {
+        "externalize": "Store session state outside the instances so any can serve any request",
+        "sticky": "Turn on sticky sessions so a user stays on one instance"
+      },
+      "answer": "externalize"
+    },
+    {
+      "id": "w3-queue-ordering",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "Two messages for the same account must be processed in order. What guarantees it?",
+      "criteria": {
+        "partition_key": "Partition the queue by account id so one consumer sees them in order",
+        "priority": "Give them a higher priority so they are processed first",
+        "single_consumer": "Use a single consumer thread for the whole queue"
+      },
+      "answer": "partition_key"
+    },
+    {
+      "id": "w2-legacy-test",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A test is slow, flaky, and asserts almost nothing. What first?",
+      "criteria": {
+        "delete": "Delete it; a slow flaky test with no signal is worse than no test",
+        "quarantine": "Quarantine it and keep it for reference"
+      },
+      "answer": "delete"
+    },
+    {
+      "id": "w3-cost-vs-latency",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A cache would cut p99 latency but adds a dependency. What decides it?",
+      "criteria": {
+        "measure": "Measure whether latency is actually a problem before adding the dependency",
+        "add_it": "Add the cache, since lower latency is usually worth it"
+      },
+      "answer": "measure"
+    },
+    {
+      "id": "w2-config-secrets",
+      "type": "choice",
+      "task": "security",
+      "instructions": "A feature flag's value must not be visible to users. What applies?",
+      "criteria": {
+        "server_only": "Resolve the flag server-side so the value never reaches the client",
+        "client_visible": "Ship the flag to the client for instant evaluation, obfuscated"
+      },
+      "answer": "server_only"
+    },
+    {
+      "id": "w3-read-replica",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "Reporting queries are slowing down the primary. What is the first move?",
+      "criteria": {
+        "replica": "Point reads at a replica and accept the staleness",
+        "index": "Add indexes and rewrite the queries before adding infrastructure",
+        "shard": "Shard the primary to spread the write and read load"
+      },
+      "answer": "index"
+    },
+    {
+      "id": "w2-graceful-shutdown",
+      "type": "choice",
+      "task": "operations",
+      "instructions": "Deploys drop in-flight requests. What is missing?",
+      "criteria": {
+        "drain": "Stop accepting new work, finish in-flight work, then exit",
+        "restart_fast": "Exit faster so the orchestrator starts the new instance sooner"
+      },
+      "answer": "drain"
+    },
+    {
+      "id": "w3-type-annotations",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A dynamic codebase is hard to refactor. What helps most?",
+      "criteria": {
+        "types_at_edges": "Add types at the module boundaries so the core can be checked",
+        "types_everywhere": "Annotate every function everywhere immediately",
+        "no_types": "Types are not the bottleneck; write tests first"
+      },
+      "answer": "types_at_edges"
+    },
+    {
+      "id": "w2-alert-fatigue",
+      "type": "choice",
+      "task": "operations",
+      "instructions": "On-call receives 200 alerts a night and acts on two. What first?",
+      "criteria": {
+        "prune": "Delete alerts that have never led to action and page only on user impact",
+        "more_rotation": "Add people to the rotation so the load is shared"
+      },
+      "answer": "prune"
+    },
+    {
+      "id": "w3-schema-registry-2",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A consumer breaks because a producer renamed a field. Prevention?",
+      "criteria": {
+        "contract_tests": "Contract tests run in the producer's CI against real consumers",
+        "changelog": "A changelog the consumers are expected to read"
+      },
+      "answer": "contract_tests"
+    },
+    {
+      "id": "w2-idempotent-migration",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A migration partially applied and the deploy retried. What property saves it?",
+      "criteria": {
+        "check_first": "The migration checks its own preconditions and skips work already done",
+        "fresh_db": "Recreate the database from scratch and replay everything"
+      },
+      "answer": "check_first"
+    },
+    {
+      "id": "w3-latency-budget",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "A request must return in 200ms and calls three services. What should exist?",
+      "criteria": {
+        "budget_split": "A per-dependency time budget derived from the 200ms total",
+        "global_timeout": "A single timeout on the whole request"
+      },
+      "answer": "budget_split"
+    },
+    {
+      "id": "w2-unicode",
+      "type": "choice",
+      "task": "design",
+      "instructions": "Usernames can contain emoji and combining characters. What is the risk?",
+      "criteria": {
+        "normalization": "Visually identical names can be distinct byte strings, so normalise deliberately",
+        "none": "Modern databases handle Unicode correctly out of the box"
+      },
+      "answer": "normalization"
+    },
+    {
+      "id": "w3-canary-analysis",
+      "type": "choice",
+      "task": "operations",
+      "instructions": "A canary looks fine but the sample is small. What should happen?",
+      "criteria": {
+        "size_first": "Size the sample for the effect you want to detect before reading results",
+        "judge_now": "If it looks fine, widen the rollout"
+      },
+      "answer": "size_first"
+    },
+    {
+      "id": "w2-doc-comments",
+      "type": "choice",
+      "task": "design",
+      "instructions": "A function has a docstring that restates its name. What is better?",
+      "criteria": {
+        "why_and_contract": "Document the contract, the invariants and why, not the mechanics",
+        "longer_docstring": "A longer docstring covering every parameter and return"
+      },
+      "answer": "why_and_contract"
+    },
+    {
+      "id": "w3-queue-poison",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "One message fails to process and blocks the queue behind it. Fix?",
+      "criteria": {
+        "dlq": "Move it to a dead-letter queue after a retry budget and alert",
+        "skip": "Drop the message silently so the queue keeps moving"
+      },
+      "answer": "dlq"
+    },
+    {
+      "id": "w2-feature-branch-ci",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "CI is configured to run only on the main branch. Problem?",
+      "criteria": {
+        "no_premerge": "Bugs are found after merge, when they are most expensive",
+        "none": "Main is the branch that matters, so testing it is sufficient"
+      },
+      "answer": "no_premerge"
+    },
+    {
+      "id": "w3-data-retention",
+      "type": "choice",
+      "task": "operations",
+      "instructions": "Event data must be kept for a year but is expensive to store. What first?",
+      "criteria": {
+        "tier_by_age": "Keep hot data recent and roll older partitions to cheap storage",
+        "drop_oldest": "Delete the oldest data to fit the budget",
+        "compress": "Compress everything and keep it all"
+      },
+      "answer": "tier_by_age"
+    },
+    {
+      "id": "w2-timezones",
+      "type": "choice",
+      "task": "design",
+      "instructions": "A nightly job must run at 02:00 in the user's local time. What is the trap?",
+      "criteria": {
+        "dst_and_travel": "DST shifts and travel make local time ambiguous; store the intent in a timezone",
+        "none": "Storing the offset is enough since offsets never change"
+      },
+      "answer": "dst_and_travel"
+    },
+    {
+      "id": "w3-blue_green-cost",
+      "type": "choice",
+      "task": "engineering",
+      "instructions": "Blue-green deploys double infrastructure cost during cutover. When are they worth it?",
+      "criteria": {
+        "irreversible": "When a rollback must be instant and the change is hard to reverse",
+        "always": "For every release, since the safety is worth the cost"
+      },
+      "answer": "irreversible"
+    },
+    {
+      "id": "w2-observability-cardinality",
+      "type": "choice",
+      "task": "operations",
+      "instructions": "A metric is labelled with the full request path. What happens?",
+      "criteria": {
+        "cardinality": "The series count explodes and the metrics backend falls over",
+        "none": "Labels are free, so this is always fine"
+      },
+      "answer": "cardinality"
+    }
+  ]
+}

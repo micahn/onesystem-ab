@@ -1,0 +1,11 @@
+node_modules/
+# Run artifacts are kept deliberately — the page's numbers have to be checkable against the
+# report that produced them. Superseded runs are not, so only the current three are tracked.
+out/ab-*.json
+out/ab-*.md
+!out/ab-2026-09-29T00-23-31.json
+!out/ab-2026-09-29T00-23-51.json
+!out/ab-2026-09-29T00-28-09.json
+!out/ab-2026-09-29T00-23-31.md
+!out/ab-2026-09-29T00-23-51.md
+!out/ab-2026-09-29T00-28-09.md

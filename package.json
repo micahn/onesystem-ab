@@ -1,0 +1,12 @@
+{
+  "name": "onesystem-ab",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic A/B between the onesystem decision models.",
+  "scripts": {
+    "ab": "bun run src/main.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.2"
+  }
+}

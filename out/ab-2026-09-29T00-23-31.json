@@ -1,0 +1,1327 @@
+{
+  "corpus": "default",
+  "corpusSha": "2c0c33e2f42b",
+  "startedAt": "2026-09-29T00:23:31.141Z",
+  "models": [
+    {
+      "model": "laya",
+      "cases": [
+        {
+          "id": "refactor-readability",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "named_helpers",
+          "expected": "named_helpers",
+          "correct": true,
+          "confidence": 0.5366,
+          "position": null,
+          "ms": 32,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "deploy-flaky",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "bigbang",
+          "expected": "canary",
+          "correct": false,
+          "confidence": 0.7127,
+          "position": null,
+          "ms": 23,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "schema-migration",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "in_place_alter",
+          "expected": "expand_backfill_contract",
+          "correct": false,
+          "confidence": 0.7879,
+          "position": null,
+          "ms": 22,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "pr-review-scope",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "as_is",
+          "expected": "split",
+          "correct": false,
+          "confidence": 0.6763,
+          "position": null,
+          "ms": 23,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "incident-severity",
+          "type": "choice",
+          "task": "operations",
+          "answer": "sev2",
+          "expected": "sev3",
+          "correct": false,
+          "confidence": 0.6601,
+          "position": null,
+          "ms": 22,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "cache-invalidation",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "invalidate_on_write",
+          "expected": "invalidate_on_write",
+          "correct": true,
+          "confidence": 0.7433,
+          "position": null,
+          "ms": 21,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "dependency-bump",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "pin_and_test",
+          "expected": "pin_and_test",
+          "correct": true,
+          "confidence": 0.637,
+          "position": null,
+          "ms": 22,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "test-mocking",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "local_server",
+          "expected": "local_server",
+          "correct": true,
+          "confidence": 0.6816,
+          "position": null,
+          "ms": 20,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "log-retention",
+          "type": "choice",
+          "task": "operations",
+          "answer": "everything",
+          "expected": "debug_level",
+          "correct": false,
+          "confidence": 0.5589,
+          "position": null,
+          "ms": 23,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "feature-flag-cleanup",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "keep",
+          "expected": "remove",
+          "correct": false,
+          "confidence": 0.7801,
+          "position": null,
+          "ms": 24,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "api-versioning",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "break_now",
+          "expected": "new_version",
+          "correct": false,
+          "confidence": 0.6756,
+          "position": null,
+          "ms": 24,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "flaky-test-quarantine",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "retry",
+          "expected": "quarantine",
+          "correct": false,
+          "confidence": 0.5292,
+          "position": null,
+          "ms": 23,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "error-message-user",
+          "type": "choice",
+          "task": "design",
+          "answer": "diagnostic",
+          "expected": "actionable",
+          "correct": false,
+          "confidence": 0.5159,
+          "position": null,
+          "ms": 24,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "naming-booleans",
+          "type": "choice",
+          "task": "design",
+          "answer": "explicit_mode",
+          "expected": "explicit_mode",
+          "correct": true,
+          "confidence": 0.6718,
+          "position": null,
+          "ms": 23,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "idempotency-key",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "idempotency_key",
+          "expected": "idempotency_key",
+          "correct": true,
+          "confidence": 0.6157,
+          "position": null,
+          "ms": 23,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "backpressure",
+          "type": "choice",
+          "task": "operations",
+          "answer": "scale_consumer",
+          "expected": "scale_consumer",
+          "correct": true,
+          "confidence": 0.5345,
+          "position": null,
+          "ms": 23,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "feature-branch-length",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "rebase_often",
+          "expected": "smaller_changes",
+          "correct": false,
+          "confidence": 0.6099,
+          "position": null,
+          "ms": 22,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "structured-logging",
+          "type": "choice",
+          "task": "design",
+          "answer": "plain",
+          "expected": "json",
+          "correct": false,
+          "confidence": 0.5061,
+          "position": null,
+          "ms": 23,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "secret-rotation",
+          "type": "choice",
+          "task": "operations",
+          "answer": "dual_write",
+          "expected": "dual_write",
+          "correct": true,
+          "confidence": 0.5228,
+          "position": null,
+          "ms": 22,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "type-vs-test",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "validate_runtime",
+          "expected": "union_type",
+          "correct": false,
+          "confidence": 0.5302,
+          "position": null,
+          "ms": 23,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        }
+      ],
+      "correct": 8,
+      "total": 20,
+      "accuracy": 0.4,
+      "meanMs": 23,
+      "warmMeanMs": 23,
+      "wrongConfidence": 0.628575,
+      "byTask": {
+        "engineering": {
+          "correct": 5,
+          "total": 13
+        },
+        "operations": {
+          "correct": 2,
+          "total": 4
+        },
+        "design": {
+          "correct": 1,
+          "total": 3
+        }
+      },
+      "byType": {
+        "choice": {
+          "correct": 8,
+          "total": 20
+        }
+      },
+      "errors": 0,
+      "_stability": [
+        20,
+        20
+      ]
+    },
+    {
+      "model": "julia",
+      "cases": [
+        {
+          "id": "refactor-readability",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "inline_comments",
+          "expected": "named_helpers",
+          "correct": false,
+          "confidence": 0.9999838124185639,
+          "position": null,
+          "ms": 17,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "deploy-flaky",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "canary",
+          "expected": "canary",
+          "correct": true,
+          "confidence": 0.9886682464686385,
+          "position": null,
+          "ms": 14,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "schema-migration",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "in_place_alter",
+          "expected": "expand_backfill_contract",
+          "correct": false,
+          "confidence": 0.9942025987455659,
+          "position": null,
+          "ms": 13,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "pr-review-scope",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "split",
+          "expected": "split",
+          "correct": true,
+          "confidence": 0.665410558746814,
+          "position": null,
+          "ms": 13,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "incident-severity",
+          "type": "choice",
+          "task": "operations",
+          "answer": "sev2",
+          "expected": "sev3",
+          "correct": false,
+          "confidence": 0.7058040386350491,
+          "position": null,
+          "ms": 13,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "cache-invalidation",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "invalidate_on_write",
+          "expected": "invalidate_on_write",
+          "correct": true,
+          "confidence": 0.8080672135527632,
+          "position": null,
+          "ms": 12,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "dependency-bump",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "pin_and_test",
+          "expected": "pin_and_test",
+          "correct": true,
+          "confidence": 0.9910145712474399,
+          "position": null,
+          "ms": 13,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "test-mocking",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "deeper_mock",
+          "expected": "local_server",
+          "correct": false,
+          "confidence": 0.9748211582993981,
+          "position": null,
+          "ms": 13,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "log-retention",
+          "type": "choice",
+          "task": "operations",
+          "answer": "debug_level",
+          "expected": "debug_level",
+          "correct": true,
+          "confidence": 0.9997834559501049,
+          "position": null,
+          "ms": 12,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "feature-flag-cleanup",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "keep",
+          "expected": "remove",
+          "correct": false,
+          "confidence": 0.9902915235185259,
+          "position": null,
+          "ms": 13,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "api-versioning",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "new_version",
+          "expected": "new_version",
+          "correct": true,
+          "confidence": 0.7057850278370112,
+          "position": null,
+          "ms": 13,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "flaky-test-quarantine",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "quarantine",
+          "expected": "quarantine",
+          "correct": true,
+          "confidence": 0.9449947117065459,
+          "position": null,
+          "ms": 12,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "error-message-user",
+          "type": "choice",
+          "task": "design",
+          "answer": "diagnostic",
+          "expected": "actionable",
+          "correct": false,
+          "confidence": 0.9777138144607745,
+          "position": null,
+          "ms": 13,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "naming-booleans",
+          "type": "choice",
+          "task": "design",
+          "answer": "explicit_mode",
+          "expected": "explicit_mode",
+          "correct": true,
+          "confidence": 0.5964331462646254,
+          "position": null,
+          "ms": 12,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "idempotency-key",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "idempotency_key",
+          "expected": "idempotency_key",
+          "correct": true,
+          "confidence": 0.9976768374773688,
+          "position": null,
+          "ms": 13,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "backpressure",
+          "type": "choice",
+          "task": "operations",
+          "answer": "drop_oldest",
+          "expected": "scale_consumer",
+          "correct": false,
+          "confidence": 0.7431680086124811,
+          "position": null,
+          "ms": 17,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "feature-branch-length",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "smaller_changes",
+          "expected": "smaller_changes",
+          "correct": true,
+          "confidence": 0.9996849613059188,
+          "position": null,
+          "ms": 17,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "structured-logging",
+          "type": "choice",
+          "task": "design",
+          "answer": "json",
+          "expected": "json",
+          "correct": true,
+          "confidence": 0.7549149868676283,
+          "position": null,
+          "ms": 16,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "secret-rotation",
+          "type": "choice",
+          "task": "operations",
+          "answer": "dual_write",
+          "expected": "dual_write",
+          "correct": true,
+          "confidence": 0.9830850867332734,
+          "position": null,
+          "ms": 19,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        },
+        {
+          "id": "type-vs-test",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "validate_runtime",
+          "expected": "union_type",
+          "correct": false,
+          "confidence": 0.9997478303421281,
+          "position": null,
+          "ms": 15,
+          "inferenceMs": null,
+          "queueMs": null,
+          "inTokens": null,
+          "outTokens": null,
+          "peakBytes": null
+        }
+      ],
+      "correct": 12,
+      "total": 20,
+      "accuracy": 0.6,
+      "meanMs": 14,
+      "warmMeanMs": 14,
+      "wrongConfidence": 0.923216598129061,
+      "byTask": {
+        "engineering": {
+          "correct": 8,
+          "total": 13
+        },
+        "operations": {
+          "correct": 2,
+          "total": 4
+        },
+        "design": {
+          "correct": 2,
+          "total": 3
+        }
+      },
+      "byType": {
+        "choice": {
+          "correct": 12,
+          "total": 20
+        }
+      },
+      "errors": 0,
+      "_stability": [
+        20,
+        20
+      ]
+    },
+    {
+      "model": "rizzo",
+      "cases": [
+        {
+          "id": "refactor-readability",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "named_helpers",
+          "expected": "named_helpers",
+          "correct": true,
+          "confidence": 0.8595104692423388,
+          "position": null,
+          "ms": 210,
+          "inferenceMs": 203.77647198620252,
+          "queueMs": 0.000690008164383471,
+          "inTokens": 227,
+          "outTokens": 0,
+          "peakBytes": 6079467520
+        },
+        {
+          "id": "deploy-flaky",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "canary",
+          "expected": "canary",
+          "correct": true,
+          "confidence": 0.946402769135313,
+          "position": null,
+          "ms": 210,
+          "inferenceMs": 204.93682600499596,
+          "queueMs": 0.0008799979696050286,
+          "inTokens": 237,
+          "outTokens": 0,
+          "peakBytes": 6079467520
+        },
+        {
+          "id": "schema-migration",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "expand_backfill_contract",
+          "expected": "expand_backfill_contract",
+          "correct": true,
+          "confidence": 0.7019686567247432,
+          "position": null,
+          "ms": 191,
+          "inferenceMs": 185.62988500343636,
+          "queueMs": 0.000600004568696022,
+          "inTokens": 229,
+          "outTokens": 0,
+          "peakBytes": 6080081920
+        },
+        {
+          "id": "pr-review-scope",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "split",
+          "expected": "split",
+          "correct": true,
+          "confidence": 0.9778016957484996,
+          "position": null,
+          "ms": 191,
+          "inferenceMs": 185.67169400921557,
+          "queueMs": 0.0004899920895695686,
+          "inTokens": 233,
+          "outTokens": 0,
+          "peakBytes": 6080081920
+        },
+        {
+          "id": "incident-severity",
+          "type": "choice",
+          "task": "operations",
+          "answer": "sev3",
+          "expected": "sev3",
+          "correct": true,
+          "confidence": 0.6345430585019727,
+          "position": null,
+          "ms": 199,
+          "inferenceMs": 193.34914299543016,
+          "queueMs": 0.000500003807246685,
+          "inTokens": 243,
+          "outTokens": 0,
+          "peakBytes": 6080081920
+        },
+        {
+          "id": "cache-invalidation",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "invalidate_on_write",
+          "expected": "invalidate_on_write",
+          "correct": true,
+          "confidence": 0.9094433979266858,
+          "position": null,
+          "ms": 189,
+          "inferenceMs": 183.37693499051966,
+          "queueMs": 0.0008200004231184721,
+          "inTokens": 225,
+          "outTokens": 0,
+          "peakBytes": 6080081920
+        },
+        {
+          "id": "dependency-bump",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "pin_and_test",
+          "expected": "pin_and_test",
+          "correct": true,
+          "confidence": 0.6229223044841588,
+          "position": null,
+          "ms": 187,
+          "inferenceMs": 181.5353359997971,
+          "queueMs": 0.007399998139590025,
+          "inTokens": 227,
+          "outTokens": 0,
+          "peakBytes": 6080081920
+        },
+        {
+          "id": "test-mocking",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "local_server",
+          "expected": "local_server",
+          "correct": true,
+          "confidence": 0.9476153406683556,
+          "position": null,
+          "ms": 188,
+          "inferenceMs": 183.51022200658917,
+          "queueMs": 0.0005600013537332416,
+          "inTokens": 231,
+          "outTokens": 0,
+          "peakBytes": 6080081920
+        },
+        {
+          "id": "log-retention",
+          "type": "choice",
+          "task": "operations",
+          "answer": "debug_level",
+          "expected": "debug_level",
+          "correct": true,
+          "confidence": 0.7267466610490618,
+          "position": null,
+          "ms": 181,
+          "inferenceMs": 175.64251700241584,
+          "queueMs": 0.0005100009730085731,
+          "inTokens": 215,
+          "outTokens": 0,
+          "peakBytes": 6080081920
+        },
+        {
+          "id": "feature-flag-cleanup",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "remove",
+          "expected": "remove",
+          "correct": true,
+          "confidence": 0.7364029474205056,
+          "position": null,
+          "ms": 184,
+          "inferenceMs": 178.40912600513548,
+          "queueMs": 0.00043999170884490013,
+          "inTokens": 224,
+          "outTokens": 0,
+          "peakBytes": 6080081920
+        },
+        {
+          "id": "api-versioning",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "new_version",
+          "expected": "new_version",
+          "correct": true,
+          "confidence": 0.9316345167854119,
+          "position": null,
+          "ms": 185,
+          "inferenceMs": 179.731886004447,
+          "queueMs": 0.0005399924702942371,
+          "inTokens": 223,
+          "outTokens": 0,
+          "peakBytes": 6080081920
+        },
+        {
+          "id": "flaky-test-quarantine",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "retry",
+          "expected": "quarantine",
+          "correct": false,
+          "confidence": 0.05027456820717613,
+          "position": null,
+          "ms": 185,
+          "inferenceMs": 180.06397799763363,
+          "queueMs": 0.0006199989002197981,
+          "inTokens": 226,
+          "outTokens": 0,
+          "peakBytes": 6080081920
+        },
+        {
+          "id": "error-message-user",
+          "type": "choice",
+          "task": "design",
+          "answer": "actionable",
+          "expected": "actionable",
+          "correct": true,
+          "confidence": 0.9740566722496757,
+          "position": null,
+          "ms": 181,
+          "inferenceMs": 175.49155000597239,
+          "queueMs": 0.0004500034265220165,
+          "inTokens": 219,
+          "outTokens": 0,
+          "peakBytes": 6080081920
+        },
+        {
+          "id": "naming-booleans",
+          "type": "choice",
+          "task": "design",
+          "answer": "keep_bool",
+          "expected": "explicit_mode",
+          "correct": false,
+          "confidence": 0.4024989279889366,
+          "position": null,
+          "ms": 235,
+          "inferenceMs": 194.09176699991804,
+          "queueMs": 0.00046000059228390455,
+          "inTokens": 222,
+          "outTokens": 0,
+          "peakBytes": 6080081920
+        },
+        {
+          "id": "idempotency-key",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "idempotency_key",
+          "expected": "idempotency_key",
+          "correct": true,
+          "confidence": 0.9450505284979744,
+          "position": null,
+          "ms": 238,
+          "inferenceMs": 224.52888000407256,
+          "queueMs": 0.0009400100680068135,
+          "inTokens": 229,
+          "outTokens": 0,
+          "peakBytes": 6080081920
+        },
+        {
+          "id": "backpressure",
+          "type": "choice",
+          "task": "operations",
+          "answer": "scale_consumer",
+          "expected": "scale_consumer",
+          "correct": true,
+          "confidence": 0.8486654980769626,
+          "position": null,
+          "ms": 251,
+          "inferenceMs": 227.80078698997386,
+          "queueMs": 0.0013600074453279376,
+          "inTokens": 230,
+          "outTokens": 0,
+          "peakBytes": 6080081920
+        },
+        {
+          "id": "feature-branch-length",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "rebase_often",
+          "expected": "smaller_changes",
+          "correct": false,
+          "confidence": 0.6375460980555467,
+          "position": null,
+          "ms": 205,
+          "inferenceMs": 195.31637900217902,
+          "queueMs": 0.0010399962775409222,
+          "inTokens": 217,
+          "outTokens": 0,
+          "peakBytes": 6080081920
+        },
+        {
+          "id": "structured-logging",
+          "type": "choice",
+          "task": "design",
+          "answer": "json",
+          "expected": "json",
+          "correct": true,
+          "confidence": 0.9633150306722906,
+          "position": null,
+          "ms": 182,
+          "inferenceMs": 176.1777549982071,
+          "queueMs": 0.0007199996616691351,
+          "inTokens": 218,
+          "outTokens": 0,
+          "peakBytes": 6080081920
+        },
+        {
+          "id": "secret-rotation",
+          "type": "choice",
+          "task": "operations",
+          "answer": "dual_write",
+          "expected": "dual_write",
+          "correct": true,
+          "confidence": 0.18370157375767548,
+          "position": null,
+          "ms": 178,
+          "inferenceMs": 173.29581899684854,
+          "queueMs": 0.000600004568696022,
+          "inTokens": 215,
+          "outTokens": 0,
+          "peakBytes": 6080081920
+        },
+        {
+          "id": "type-vs-test",
+          "type": "choice",
+          "task": "engineering",
+          "answer": "union_type",
+          "expected": "union_type",
+          "correct": true,
+          "confidence": 0.6049096427255767,
+          "position": null,
+          "ms": 189,
+          "inferenceMs": 183.34682600107044,
+          "queueMs": 0.0005699985194951296,
+          "inTokens": 232,
+          "outTokens": 0,
+          "peakBytes": 6080081920
+        }
+      ],
+      "correct": 17,
+      "total": 20,
+      "accuracy": 0.85,
+      "meanMs": 198,
+      "warmMeanMs": 197,
+      "wrongConfidence": 0.3634398647505532,
+      "byTask": {
+        "engineering": {
+          "correct": 11,
+          "total": 13
+        },
+        "operations": {
+          "correct": 4,
+          "total": 4
+        },
+        "design": {
+          "correct": 2,
+          "total": 3
+        }
+      },
+      "byType": {
+        "choice": {
+          "correct": 17,
+          "total": 20
+        }
+      },
+      "errors": 0,
+      "_stability": [
+        20,
+        20
+      ]
+    }
+  ],
+  "pairs": [
+    {
+      "a": "laya",
+      "b": "julia",
+      "agree": 10,
+      "total": 20,
+      "observed": 0.5,
+      "independent": 0.48,
+      "lift": 0.020000000000000018,
+      "bothRight": 5,
+      "bothWrong": 5,
+      "onlyA": 3,
+      "onlyB": 7
+    },
+    {
+      "a": "laya",
+      "b": "rizzo",
+      "agree": 9,
+      "total": 20,
+      "observed": 0.45,
+      "independent": 0.43000000000000005,
+      "lift": 0.019999999999999962,
+      "bothRight": 7,
+      "bothWrong": 2,
+      "onlyA": 1,
+      "onlyB": 10
+    },
+    {
+      "a": "julia",
+      "b": "rizzo",
+      "agree": 9,
+      "total": 20,
+      "observed": 0.45,
+      "independent": 0.5700000000000001,
+      "lift": -0.12000000000000005,
+      "bothRight": 9,
+      "bothWrong": 0,
+      "onlyA": 3,
+      "onlyB": 8
+    }
+  ],
+  "disagreements": [
+    {
+      "id": "refactor-readability",
+      "task": "engineering",
+      "type": "choice",
+      "expected": "named_helpers",
+      "byModel": {
+        "laya": "named_helpers",
+        "julia": "inline_comments",
+        "rizzo": "named_helpers"
+      }
+    },
+    {
+      "id": "deploy-flaky",
+      "task": "engineering",
+      "type": "choice",
+      "expected": "canary",
+      "byModel": {
+        "laya": "bigbang",
+        "julia": "canary",
+        "rizzo": "canary"
+      }
+    },
+    {
+      "id": "schema-migration",
+      "task": "engineering",
+      "type": "choice",
+      "expected": "expand_backfill_contract",
+      "byModel": {
+        "laya": "in_place_alter",
+        "julia": "in_place_alter",
+        "rizzo": "expand_backfill_contract"
+      }
+    },
+    {
+      "id": "pr-review-scope",
+      "task": "engineering",
+      "type": "choice",
+      "expected": "split",
+      "byModel": {
+        "laya": "as_is",
+        "julia": "split",
+        "rizzo": "split"
+      }
+    },
+    {
+      "id": "incident-severity",
+      "task": "operations",
+      "type": "choice",
+      "expected": "sev3",
+      "byModel": {
+        "laya": "sev2",
+        "julia": "sev2",
+        "rizzo": "sev3"
+      }
+    },
+    {
+      "id": "test-mocking",
+      "task": "engineering",
+      "type": "choice",
+      "expected": "local_server",
+      "byModel": {
+        "laya": "local_server",
+        "julia": "deeper_mock",
+        "rizzo": "local_server"
+      }
+    },
+    {
+      "id": "log-retention",
+      "task": "operations",
+      "type": "choice",
+      "expected": "debug_level",
+      "byModel": {
+        "laya": "everything",
+        "julia": "debug_level",
+        "rizzo": "debug_level"
+      }
+    },
+    {
+      "id": "feature-flag-cleanup",
+      "task": "engineering",
+      "type": "choice",
+      "expected": "remove",
+      "byModel": {
+        "laya": "keep",
+        "julia": "keep",
+        "rizzo": "remove"
+      }
+    },
+    {
+      "id": "api-versioning",
+      "task": "engineering",
+      "type": "choice",
+      "expected": "new_version",
+      "byModel": {
+        "laya": "break_now",
+        "julia": "new_version",
+        "rizzo": "new_version"
+      }
+    },
+    {
+      "id": "flaky-test-quarantine",
+      "task": "engineering",
+      "type": "choice",
+      "expected": "quarantine",
+      "byModel": {
+        "laya": "retry",
+        "julia": "quarantine",
+        "rizzo": "retry"
+      }
+    },
+    {
+      "id": "error-message-user",
+      "task": "design",
+      "type": "choice",
+      "expected": "actionable",
+      "byModel": {
+        "laya": "diagnostic",
+        "julia": "diagnostic",
+        "rizzo": "actionable"
+      }
+    },
+    {
+      "id": "naming-booleans",
+      "task": "design",
+      "type": "choice",
+      "expected": "explicit_mode",
+      "byModel": {
+        "laya": "explicit_mode",
+        "julia": "explicit_mode",
+        "rizzo": "keep_bool"
+      }
+    },
+    {
+      "id": "backpressure",
+      "task": "operations",
+      "type": "choice",
+      "expected": "scale_consumer",
+      "byModel": {
+        "laya": "scale_consumer",
+        "julia": "drop_oldest",
+        "rizzo": "scale_consumer"
+      }
+    },
+    {
+      "id": "feature-branch-length",
+      "task": "engineering",
+      "type": "choice",
+      "expected": "smaller_changes",
+      "byModel": {
+        "laya": "rebase_often",
+        "julia": "smaller_changes",
+        "rizzo": "rebase_often"
+      }
+    },
+    {
+      "id": "structured-logging",
+      "task": "design",
+      "type": "choice",
+      "expected": "json",
+      "byModel": {
+        "laya": "plain",
+        "julia": "json",
+        "rizzo": "json"
+      }
+    },
+    {
+      "id": "type-vs-test",
+      "task": "engineering",
+      "type": "choice",
+      "expected": "union_type",
+      "byModel": {
+        "laya": "validate_runtime",
+        "julia": "validate_runtime",
+        "rizzo": "union_type"
+      }
+    }
+  ],
+  "unanimous": {
+    "count": 4,
+    "total": 20
+  },
+  "oracle": {
+    "correct": 20,
+    "total": 20,
+    "headroom": 3
+  },
+  "majority": {
+    "accuracy": 0.65,
+    "correct": 13,
+    "total": 20,
+    "note": "modal answer wins, 0 of 20 cases three-way tied"
+  },
+  "stability": [
+    {
+      "model": "laya",
+      "identical": 20,
+      "total": 20
+    },
+    {
+      "model": "julia",
+      "identical": 20,
+      "total": 20
+    },
+    {
+      "model": "rizzo",
+      "identical": 20,
+      "total": 20
+    }
+  ],
+  "repeat": 2
+}
